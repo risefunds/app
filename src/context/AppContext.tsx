@@ -1,4 +1,10 @@
-import React, { createContext, useMemo, useReducer, useState } from 'react';
+import React, {
+  createContext,
+  useMemo,
+  useReducer,
+  useState,
+  useEffect,
+} from 'react';
 import { useSnackbar, VariantType, OptionsObject } from 'notistack';
 import { models, ISDKServices, getSDKServices } from '@risefunds/sdk';
 import {
@@ -7,6 +13,7 @@ import {
   signOutHandler,
   FirebaseUser,
 } from 'utils/FirebaseAuth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
   useWidth,
   getWindowDimensions,
@@ -98,11 +105,39 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const [platformUser, setPlatformUser] = useState<
     models.PlatformUserEntityModel | undefined
   >();
+  const [authUserLoading, setAuthUserLoading] = useState(true);
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | undefined>(
+    undefined
+  );
+  const { height, width } = getWindowDimensions();
   const { enqueueSnackbar } = useSnackbar();
   const responsiveWidth = useWidth();
+  const initialLocalStore =
+    typeof window !== 'undefined'
+      ? JSON.parse(window.localStorage.getItem('appLocalStore') || '[]')
+      : [];
+  const [localStore, dispatch] = useReducer(
+    LocalStoreReducer,
+    initialLocalStore
+  );
 
   // Initialize SDK services here
   const sdkServices = useMemo(() => getSDKServices(), []);
+
+  // Track Firebase auth state
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setFirebaseUser(user);
+      } else {
+        setFirebaseUser(undefined);
+      }
+      setAuthUserLoading(false);
+    });
+
+    return () => unsubscribe(); // Cleanup on unmount
+  }, []);
 
   const helper: IAppContextHelper = useMemo(() => {
     return {
@@ -124,6 +159,10 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
         enqueueSnackbar(message, { variant: 'success' });
       },
       isMobile: responsiveWidth === 'xs',
+      authUserLoading,
+      height,
+      width,
+      firebaseUser, // Add firebaseUser to the helper
       setPlatformUser,
       signOut: signOutHandler, // Use the custom signOutHandler
       signInWithEmailLink: async (link: string) => {
@@ -135,8 +174,32 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       },
       signInWithCustomToken: signInWithCustomTokenHandler, // Use the custom handler
+      setLocalStoreValue: (key: string, value: any) => {
+        dispatch({ type: 'SET', data: { key, value } });
+        window.localStorage.setItem(
+          'appLocalStore',
+          JSON.stringify(localStore)
+        );
+      },
+      deleteLocalStoreValue: (key: string) => {
+        dispatch({ type: 'DELETE', data: { key } });
+        window.localStorage.setItem(
+          'appLocalStore',
+          JSON.stringify(localStore)
+        );
+      },
+      getLocalStoreValue: (key: string) => {
+        const storedValue = localStore.find((item) => item.key === key);
+        return storedValue ? storedValue.value : undefined;
+      },
     };
-  }, [enqueueSnackbar, responsiveWidth]);
+  }, [
+    enqueueSnackbar,
+    responsiveWidth,
+    authUserLoading,
+    firebaseUser,
+    localStore,
+  ]);
 
   return (
     <AppContext.Provider value={{ helper, sdkServices }}>

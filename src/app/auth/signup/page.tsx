@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AppContext } from 'context/AppContext';
 import { Typography, List, ListItem } from '@mui/material';
 import NextLink from 'next/link';
@@ -9,8 +9,17 @@ import { FormBuilderJSON } from 'components/FormBuilder';
 import { useRouter } from 'next/navigation';
 
 const SignupPage: React.FC = () => {
-  const appContext = useContext(AppContext); // Access AppContext
+  const appContext = useContext(AppContext);
   const router = useRouter();
+
+  console.log({ appContext });
+
+  // Redirect to the homepage if the user is already logged in
+  useEffect(() => {
+    if (appContext.helper.firebaseUser) {
+      router.push('/');
+    }
+  }, [appContext.helper.firebaseUser, router]);
 
   return (
     <AuthLayout pageTitle="Register">
@@ -24,8 +33,6 @@ const SignupPage: React.FC = () => {
           },
           onSubmit: async (values) => {
             try {
-              console.log({ appContext });
-
               const signupResponse =
                 await appContext.sdkServices?.base.backendService.request<{
                   customToken: string;

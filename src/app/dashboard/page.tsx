@@ -1,13 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { AppContext } from 'context/AppContext';
 import { auth } from 'utils/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const [user, setUser] = useState<null | { email: string }>(null);
+  const appContext = useContext(AppContext);
   const router = useRouter();
+
+  console.log({ appContext });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
