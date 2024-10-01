@@ -1,121 +1,141 @@
 import { models, IReferenceDB, IWhereParam } from '@risefunds/sdk';
-import firebase from 'firebase';
+import { firestore } from './firebaseConfig';
+import {
+  getFirestore,
+  connectFirestoreEmulator,
+  collection,
+  doc,
+  setDoc,
+  getDoc, // Use for single document
+  getDocs, // Use for querying collections
+  query,
+  where,
+  onSnapshot,
+  Firestore,
+  Timestamp,
+  DocumentData,
+  WhereFilterOp,
+} from 'firebase/firestore';
 
 export class DBServiceClient implements IReferenceDB {
-  firestoreInstance: firebase.firestore.Firestore = firebase.firestore();
+  firestoreInstance: Firestore;
 
-  constructor() {}
-
-  transformDateTo(date: Date) {
-    return firebase.firestore.Timestamp.fromDate(date);
+  constructor() {
+    this.firestoreInstance = firestore;
+  }
+  transformDateTo(date: Date): Timestamp {
+    return Timestamp.fromDate(date);
   }
 
-  transformDateFrom(object: firebase.firestore.Timestamp): Date {
+  transformDateFrom(object: Timestamp): Date {
     return object.toDate();
+  }
+
+  connectToEmulator() {
+    if (process.env.NEXT_PUBLIC_ENV === 'local') {
+      connectFirestoreEmulator(this.firestoreInstance, 'localhost', 8080);
+    }
   }
 
   isAdmin = false;
 
   private getCollection = <Model>(collectionName: string) => {
-    return this.firestoreInstance.collection(collectionName);
+    return collection(this.firestoreInstance, collectionName);
   };
 
-  public get = async <Model extends models.IBaseEntityModel>(
+  // Use `getDoc` for a single document
+  public async get<Model extends models.IBaseEntityModel>(
     collectionName: string,
-    id: string,
-  ): Promise<Model | undefined> => {
-    const docRef = this.getCollection<Model>(collectionName).doc(id);
-    const res = await docRef.get();
-    if (res.exists) {
+    id: string
+  ): Promise<Model | undefined> {
+    const docRef = doc(this.getCollection<Model>(collectionName), id);
+    const res = await getDoc(docRef); // Use getDoc here
+    if (res.exists()) {
       const data = res.data();
       return data as Model;
     }
-
     return undefined;
-  };
+  }
 
-  public persist = async <Model extends models.IBaseEntityModel>(
+  public async persist<Model extends models.IBaseEntityModel>(
     collectionName: string,
-    data: Model,
-  ): Promise<Model | undefined> => {
-    if (!(data as any).id) throw new Error('ID is not defined');
-    const docRef = this.getCollection<Model>(collectionName).doc(data.id);
-    await docRef.set(data);
-    return this.get(collectionName, data.id);
-  };
+    data: Model
+  ): Promise<Model | undefined> {
+    if (!data.id) throw new Error('ID is not defined');
+    const docRef = doc(this.getCollection<Model>(collectionName), data.id);
+    await setDoc(docRef, data);
+    return this.get(collectionName, data.id); // Get the updated document
+  }
 
   private getQueryWithParamsArray = <Model>(
     collectionName: string,
-    queryParams: IWhereParam[] = [],
+    queryParams: IWhereParam[] = []
   ) => {
-    const whereQueries = queryParams.filter((qp) => qp.key !== 'orderBy');
-    let collectionQuery: any = this.getCollection(collectionName);
-    for (let qp of whereQueries) {
-      collectionQuery = collectionQuery.where(
-        qp.key,
-        qp.operator as firebase.firestore.WhereFilterOp,
-        qp.value,
-      );
-    }
+    let collectionRef = this.getCollection<Model>(collectionName);
+    let collectionQuery = query(collectionRef);
 
-    return collectionQuery as firebase.firestore.Query<firebase.firestore.DocumentData>;
+    queryParams.forEach((qp) => {
+      const condition = where(qp.key, qp.operator as WhereFilterOp, qp.value);
+      collectionQuery = query(collectionRef, condition); // Add conditions to query
+    });
+
+    return collectionQuery;
   };
 
+  // Use `getDocs` for querying multiple documents
+  public async where<Model>(
+    collectionName: string,
+    queryParams: IWhereParam[]
+  ): Promise<Model[]> {
+    const queryRef = this.getQueryWithParamsArray<Model>(
+      collectionName,
+      queryParams
+    );
+
+    const querySnapshot = await getDocs(queryRef); // Use getDocs here for multiple documents
+    return querySnapshot.docs.map((doc) => doc.data() as Model);
+  }
+
+  // Subscribe to collection changes
   public subscribe<Model>(
     collectionName: string,
     queryParams: IWhereParam[],
-    callBack: (error?: Error, data?: Model[]) => void,
+    callBack: (error?: Error, data?: Model[]) => void
   ) {
-    let query = this.getQueryWithParamsArray<Model>(
+    const queryRef = this.getQueryWithParamsArray<Model>(
       collectionName,
-      queryParams,
+      queryParams
     );
-    return query.onSnapshot(
+
+    return onSnapshot(
+      queryRef,
       (querySnapshot) => {
         callBack(
           undefined,
-          querySnapshot.docs
-            .filter((d: any) => (d.data().createdAt ? true : false))
-            .map((d) => {
-              return d.data() as Model;
-            }),
+          querySnapshot.docs.map((doc) => doc.data() as Model)
         );
       },
       (error) => {
         callBack(error);
-      },
+      }
     );
   }
 
+  // Subscribe to a single document
   public subscribeDocument<Model>(
     collectionName: string,
     id: string,
-    callBack: (error?: Error, data?: Model) => void,
+    callBack: (error?: Error, data?: Model) => void
   ) {
-    return this.getCollection(collectionName)
-      .doc(id)
-      .onSnapshot(
-        (documentSnapshot) => {
-          callBack(undefined, documentSnapshot.data() as Model);
-        },
-        (error) => {
-          callBack(error);
-        },
-      );
-  }
-
-  public where = async <Model>(
-    collectionName: string,
-    queryParams: IWhereParam[],
-  ): Promise<Model[]> => {
-    let query = this.getQueryWithParamsArray<Model>(
-      collectionName,
-      queryParams,
+    const docRef = doc(this.getCollection<Model>(collectionName), id);
+    return onSnapshot(
+      docRef,
+      (documentSnapshot) => {
+        callBack(undefined, documentSnapshot.data() as Model);
+      },
+      (error) => {
+        callBack(error);
+      }
     );
-
-    const qs = await query.get();
-    return qs.docs.map((doc) => {
-      return doc.data() as Model;
-    });
-  };
+  }
 }

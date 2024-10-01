@@ -1,15 +1,15 @@
 'use client';
 
+import { useContext } from 'react';
+import { AppContext } from 'context/AppContext';
 import { Typography, List, ListItem } from '@mui/material';
-import React from 'react';
 import NextLink from 'next/link';
-import { auth } from 'utils/firebaseConfig';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { AuthLayout } from 'layouts/AuthLayout';
 import { FormBuilderJSON } from 'components/FormBuilder';
 import { useRouter } from 'next/navigation';
 
 const SignupPage: React.FC = () => {
+  const appContext = useContext(AppContext); // Access AppContext
   const router = useRouter();
 
   return (
@@ -22,14 +22,22 @@ const SignupPage: React.FC = () => {
             email: '',
             password: '',
           },
-
           onSubmit: async (values) => {
             try {
-              // Ensure this code is only executed in a client context
-              await createUserWithEmailAndPassword(
-                auth,
-                values.email,
-                values.password
+              console.log({ appContext });
+
+              const signupResponse =
+                await appContext.sdkServices?.base.backendService.request<{
+                  customToken: string;
+                }>(
+                  '/pub/addon/entity/PlatformUser/getPlatformUser',
+                  { user: values, type: ['creative'] },
+                  false
+                );
+              if (!signupResponse)
+                throw new Error('Signup failed. Please try again.');
+              await appContext.helper.signInWithCustomToken(
+                signupResponse.customToken
               );
               router.push('/dashboard');
             } catch (error: any) {
@@ -43,7 +51,7 @@ const SignupPage: React.FC = () => {
           steps: [
             {
               id: 'signupdetails',
-              fields: ['displayName', 'email', 'password'],
+              fields: ['firstName', 'lastName', 'email', 'password'],
               title: 'Signup',
               footerSubmitTitle: 'Register',
             },

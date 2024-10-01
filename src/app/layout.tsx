@@ -1,7 +1,9 @@
 'use client';
+
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { ThemeProvider, CssBaseline } from '@mui/material';
-import theme from '../utils/theme';
+import theme from 'utils/theme';
+import AppConsumerComponent from '../components/AppConsumer';
 
 export default function RootLayout({
   children,
@@ -14,7 +16,11 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            {children}
+            {/* Wrap the entire layout with AppConsumerComponent */}
+            <AppConsumerComponent
+              Component={() => <>{children}</>}
+              pageProps={{}}
+            />
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

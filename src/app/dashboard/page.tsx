@@ -14,7 +14,7 @@ export default function Dashboard() {
       if (user) {
         setUser({ email: user.email! });
       } else {
-        router.push('/login');
+        router.push('/auth/login');
       }
     });
 

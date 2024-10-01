@@ -19,7 +19,7 @@ const FormBuilderStepField = (props: FormBuilderStepItemPropsType) => {
   const [skipped, setSkipped] = useState(
     props.field.skip
       ? props.field.skip(props.getValues(), undefined, props.readOnly)
-      : false,
+      : false
   );
 
   useEffect(() => {
@@ -47,13 +47,12 @@ const FormBuilderStepField = (props: FormBuilderStepItemPropsType) => {
       readOnly={props.readOnly}
       value={v}
       setFieldValue={(updatedValues: any) => {
-        console.log('formbuilder set field value', updatedValues);
         props.setFieldValue(props.field.id, updatedValues);
         if (props.field.onChange)
           props.field.onChange(
             props.getValues(),
             updatedValues,
-            props.setFieldValue,
+            props.setFieldValue
           );
       }}
       setFieldTouched={(idx?: number) => {
