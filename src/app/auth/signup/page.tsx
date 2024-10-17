@@ -48,7 +48,7 @@ const SignupPage: React.FC = () => {
               );
               router.push('/dashboard');
             } catch (error: any) {
-              console.log(error.message); // Handle errors
+              console.log(error.message);
             }
           },
         }}
