@@ -25,7 +25,6 @@ export interface INavigationLayoutProps {
 }
 
 const buttonStyles = {
-  // Define your shared styles here
   padding: '10px 20px',
   borderRadius: '8px',
   fontSize: '1rem',
@@ -161,10 +160,18 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
               <Box sx={{ flexGrow: 0 }}>
                 {true ? (
                   <Stack spacing={2} direction="row">
-                    <Button variant="outlined" sx={buttonStyles}>
+                    <Button
+                      variant="outlined"
+                      sx={buttonStyles}
+                      onClick={() => router.push('/auth/login')}
+                    >
                       Log in
                     </Button>
-                    <Button variant="contained" sx={buttonStyles}>
+                    <Button
+                      variant="contained"
+                      sx={buttonStyles}
+                      onClick={() => router.push('/dashboard')}
+                    >
                       Start a Campaign
                     </Button>
                   </Stack>
