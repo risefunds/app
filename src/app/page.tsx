@@ -1,6 +1,7 @@
 'use client';
 
 import { NavigationLayout } from 'layouts/NavigationLayout';
+import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
@@ -8,6 +9,31 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
+import Image from 'next/image';
+
+const imgContainer = {
+  filter: 'grayscale()',
+  backgroundColor: '#eff1f700',
+  border: '1px solid #131f5b33',
+  transition: 'filter .2s',
+  borderRadius: '.375rem',
+  flex: 'none',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '14rem',
+  height: '6rem',
+  padding: '1rem 2rem',
+  position: 'relative',
+  display: 'flex',
+};
+
+const imageStyle = {
+  height: '100%',
+  verticalAlign: 'middle',
+  maxWidth: '100%',
+  display: 'inline-block',
+  padding: '1rem',
+};
 
 const buttonStyles = {
   padding: '10px 20px',
@@ -19,20 +45,64 @@ const buttonStyles = {
 
 const itemData = [
   {
-    img: 'https://images.unsplash.com/photo-1549388604-817d15aa0110',
+    img: '/Home/hero1.webp',
     title: 'Bed',
   },
   {
-    img: 'https://images.unsplash.com/photo-1563298723-dcfebaa392e3',
+    img: '/Home/hero2.jpg',
     title: 'Kitchen',
   },
 ];
 
+const popularCampaigns = [
+  {
+    img: '/Home/pop1.webp',
+    name: 'ChessUp 2 : Chess.com on a Real Board',
+    category: 'tech',
+    amountRaised: 2512191,
+  },
+  {
+    img: '/Home/pop2.webp',
+    name: 'OCTOPUNX: New Site and Content for Octopunk Media',
+    category: 'web series & tv shows',
+    amountRaised: 16284,
+  },
+  {
+    img: '/Home/pop3.webp',
+    name: 'Odin2 Portal: The Ultimate 7 OLED Gaming Handheld',
+    category: 'video games',
+    amountRaised: 128689,
+  },
+  {
+    img: '/Home/pop4.webp',
+    name: 'C&Rsenal SOFT T-Shirts 2024',
+    category: 'arts',
+    amountRaised: 45125,
+  },
+  {
+    img: '/Home/pop5.webp',
+    name: 'Kabata: Take the Guesswork Out of Your Workout.',
+    category: 'health & fitness',
+    amountRaised: 599624,
+  },
+  {
+    img: '/Home/pop6.webp',
+    name: 'Meraki: Ultimate Espresso',
+    category: 'home',
+    amountRaised: 2668285,
+  },
+];
+
 export default function Home() {
+  const router = useRouter();
   return (
     <NavigationLayout>
       <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2} sx={{ height: '80vh', margin: '2rem' }}>
+        <Grid
+          container
+          spacing={2}
+          sx={{ minHeight: 'calc(85vh - 60px);', margin: '2rem' }}
+        >
           <Grid
             size={{ xs: 12, md: 6 }}
             sx={{ padding: '8rem 2rem 2rem 2rem' }}
@@ -69,7 +139,11 @@ export default function Home() {
                 get funded, and turn your passion into reality.
               </Typography>
 
-              <Button variant="contained" sx={buttonStyles}>
+              <Button
+                variant="contained"
+                sx={buttonStyles}
+                onClick={() => router.push('/dashboard')}
+              >
                 Start a Campaign
               </Button>
             </Stack>
@@ -94,6 +168,105 @@ export default function Home() {
             </ImageList>
           </Grid>
         </Grid>
+      </Box>
+      <Box
+        sx={{
+          margin: '3rem 0',
+          padding: '2rem',
+        }}
+      >
+        <Typography
+          component="h2"
+          sx={{
+            mr: 2,
+            fontSize: '4rem',
+            width: '50%',
+            lineHeight: 1,
+            letterSpacing: '.01rem',
+            color: 'inherit',
+            marginBottom: '5rem',
+          }}
+        >
+          We’re proud to partner with the best
+        </Typography>
+        <Stack direction="row" spacing={2} justifyContent="space-between">
+          <Box sx={imgContainer}>
+            <Image
+              src="/Featured/lig.png"
+              layout="fill"
+              style={imageStyle}
+              objectFit="contain"
+              alt="Picture of the author"
+            />
+          </Box>
+
+          <Box sx={imgContainer}>
+            <Image
+              src="/Featured/horizon-partners.png"
+              layout="fill"
+              style={imageStyle}
+              objectFit="contain"
+              alt="Picture of the author"
+            />
+          </Box>
+
+          <Box sx={imgContainer}>
+            <Image
+              src="/Featured/keystone.png"
+              layout="fill"
+              style={imageStyle}
+              objectFit="contain"
+              alt="Picture of the author"
+            />
+          </Box>
+
+          <Box sx={imgContainer}>
+            <Image
+              src="/Featured/my-insurance-solutions.png"
+              layout="fill"
+              style={imageStyle}
+              objectFit="contain"
+              alt="Picture of the author"
+            />
+          </Box>
+
+          <Box sx={imgContainer}>
+            <Image
+              src="/Featured/tapestry.png"
+              layout="fill"
+              style={imageStyle}
+              objectFit="contain"
+              alt="Picture of the author"
+            />
+          </Box>
+        </Stack>
+      </Box>
+
+      <Box
+        sx={{
+          margin: '3rem ',
+          padding: '2rem',
+          backgroundColor: 'secondary.main',
+        }}
+      >
+        <Typography
+          component="h2"
+          sx={{
+            mr: 2,
+            fontSize: '4rem',
+            width: '50%',
+            lineHeight: 1,
+            letterSpacing: '.01rem',
+            color: 'inherit',
+            marginBottom: '5rem',
+          }}
+        >
+          Popular Campaigns
+        </Typography>
+
+        {popularCampaigns.map((pc) => (
+          <h1>{pc.name}</h1>
+        ))}
       </Box>
     </NavigationLayout>
   );
