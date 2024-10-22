@@ -3,6 +3,7 @@
 import { NavigationLayout } from 'layouts/NavigationLayout';
 import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -10,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Image from 'next/image';
+import { CampaignCard } from 'components/generic/CampaignCard';
 
 const imgContainer = {
   filter: 'grayscale()',
@@ -244,7 +246,7 @@ export default function Home() {
 
       <Box
         sx={{
-          margin: '3rem ',
+          margin: '3rem 0',
           padding: '2rem',
           backgroundColor: 'secondary.main',
         }}
@@ -264,9 +266,166 @@ export default function Home() {
           Popular Campaigns
         </Typography>
 
-        {popularCampaigns.map((pc) => (
-          <h1>{pc.name}</h1>
-        ))}
+        {/* Center the Grid horizontally */}
+        <Grid
+          container
+          spacing={3}
+          sx={{ margin: '3rem', width: '100%' }}
+          justifyContent="center"
+        >
+          {popularCampaigns.map((campaign) => (
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={campaign.name}>
+              <CampaignCard
+                img={campaign.img}
+                name={campaign.name}
+                category={campaign.category}
+                amountRaised={campaign.amountRaised}
+                // Set the height and use flex for equal height
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                }}
+              />
+            </Grid>
+          ))}
+        </Grid>
+        <Box sx={{ width: '100%', textAlign: 'center' }}>
+          <Button
+            variant="outlined"
+            sx={buttonStyles}
+            onClick={() => router.push('/auth/login')}
+          >
+            Explore All Campaigns
+          </Button>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          backgroundColor: 'primary.main',
+          color: 'primary.contrastText',
+          padding: '3rem 2rem',
+          mt: 'auto',
+        }}
+      >
+        <Grid container spacing={4} justifyContent="space-between">
+          {/* Logo and Description */}
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="#app-bar-with-responsive-menu"
+              sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontSize: '2.5rem',
+                fontWeight: 700,
+                letterSpacing: '.1rem',
+                color: 'primary.contrastText',
+                textDecoration: 'none',
+              }}
+            >
+              RISEFUNDS
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'inherit' }}>
+              Empowering independent agents with the tools and resources to grow
+              their businesses.
+            </Typography>
+          </Grid>
+
+          {/* Quick Links */}
+          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <Typography variant="subtitle1" gutterBottom>
+              Quick Links
+            </Typography>
+            <Link href="/" color="inherit" sx={{ display: 'block', mb: 1 }}>
+              Home
+            </Link>
+            <Link
+              href="/about"
+              color="inherit"
+              sx={{ display: 'block', mb: 1 }}
+            >
+              About Us
+            </Link>
+            <Link
+              href="/services"
+              color="inherit"
+              sx={{ display: 'block', mb: 1 }}
+            >
+              Services
+            </Link>
+            <Link
+              href="/contact"
+              color="inherit"
+              sx={{ display: 'block', mb: 1 }}
+            >
+              Contact
+            </Link>
+          </Grid>
+
+          {/* Resources */}
+          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <Typography variant="subtitle1" gutterBottom>
+              Resources
+            </Typography>
+            <Link href="/blog" color="inherit" sx={{ display: 'block', mb: 1 }}>
+              Blog
+            </Link>
+            <Link
+              href="/careers"
+              color="inherit"
+              sx={{ display: 'block', mb: 1 }}
+            >
+              Careers
+            </Link>
+            <Link href="/faq" color="inherit" sx={{ display: 'block', mb: 1 }}>
+              FAQ
+            </Link>
+          </Grid>
+
+          {/* Contact Information */}
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Typography variant="subtitle1" gutterBottom>
+              Contact Us
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#b0b0b0', mb: 1 }}>
+              Phone: (123) 456-7890
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#b0b0b0', mb: 1 }}>
+              Email: info@risefunds.com
+            </Typography>
+            <Button
+              variant="outlined"
+              color="secondary"
+              href="/contact"
+              sx={{
+                mt: 2,
+                textTransform: 'none',
+                padding: '10px 20px',
+                borderRadius: '8px',
+              }}
+            >
+              Get in Touch
+            </Button>
+          </Grid>
+        </Grid>
+
+        {/* Footer Bottom */}
+        <Box
+          sx={{
+            mt: 4,
+            pt: 2,
+            borderTop: '1px solid #555',
+            textAlign: 'center',
+          }}
+        >
+          <Typography variant="body2" sx={{ color: '#b0b0b0' }}>
+            © 2024 RiseFunds. All rights reserved.
+          </Typography>
+        </Box>
       </Box>
     </NavigationLayout>
   );
