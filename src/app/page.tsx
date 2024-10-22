@@ -1,101 +1,432 @@
+'use client';
+
+import { NavigationLayout } from 'layouts/NavigationLayout';
+import { useRouter } from 'next/navigation';
+import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
 import Image from 'next/image';
+import { CampaignCard } from 'components/generic/CampaignCard';
+
+const imgContainer = {
+  filter: 'grayscale()',
+  backgroundColor: '#eff1f700',
+  border: '1px solid #131f5b33',
+  transition: 'filter .2s',
+  borderRadius: '.375rem',
+  flex: 'none',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '14rem',
+  height: '6rem',
+  padding: '1rem 2rem',
+  position: 'relative',
+  display: 'flex',
+};
+
+const imageStyle = {
+  height: '100%',
+  verticalAlign: 'middle',
+  maxWidth: '100%',
+  display: 'inline-block',
+  padding: '1rem',
+};
+
+const buttonStyles = {
+  padding: '10px 20px',
+  borderRadius: '8px',
+  fontSize: '1rem',
+  fontWeight: 'bold',
+  width: 'fit-content',
+};
+
+const itemData = [
+  {
+    img: '/Home/hero1.webp',
+    title: 'Bed',
+  },
+  {
+    img: '/Home/hero2.jpg',
+    title: 'Kitchen',
+  },
+];
+
+const popularCampaigns = [
+  {
+    img: '/Home/pop1.webp',
+    name: 'ChessUp 2 : Chess.com on a Real Board',
+    category: 'tech',
+    amountRaised: 2512191,
+  },
+  {
+    img: '/Home/pop2.webp',
+    name: 'OCTOPUNX: New Site and Content for Octopunk Media',
+    category: 'web series & tv shows',
+    amountRaised: 16284,
+  },
+  {
+    img: '/Home/pop3.webp',
+    name: 'Odin2 Portal: The Ultimate 7 OLED Gaming Handheld',
+    category: 'video games',
+    amountRaised: 128689,
+  },
+  {
+    img: '/Home/pop4.webp',
+    name: 'C&Rsenal SOFT T-Shirts 2024',
+    category: 'arts',
+    amountRaised: 45125,
+  },
+  {
+    img: '/Home/pop5.webp',
+    name: 'Kabata: Take the Guesswork Out of Your Workout.',
+    category: 'health & fitness',
+    amountRaised: 599624,
+  },
+  {
+    img: '/Home/pop6.webp',
+    name: 'Meraki: Ultimate Espresso',
+    category: 'home',
+    amountRaised: 2668285,
+  },
+];
 
 export default function Home() {
+  const router = useRouter();
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{' '}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <NavigationLayout>
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid
+          container
+          spacing={2}
+          sx={{ minHeight: 'calc(85vh - 60px);', margin: '2rem' }}
+        >
+          <Grid
+            size={{ xs: 12, md: 6 }}
+            sx={{ padding: '8rem 2rem 2rem 2rem' }}
+          >
+            <Stack spacing={3}>
+              <Typography
+                variant="h1"
+                component="h1"
+                sx={{
+                  mr: 2,
+                  fontSize: '5rem',
+                  fontWeight: 500,
+                  lineHeight: 1,
+                  letterSpacing: '.08rem',
+                  color: 'secondary.contrastText',
+                  textDecoration: 'none',
+                }}
+              >
+                Fuel your ideas, ignite your impact.
+              </Typography>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+              <Typography
+                component="p"
+                sx={{
+                  mr: 2,
+                  fontSize: '1.5rem',
+                  lineHeight: 1.5,
+                  letterSpacing: '.01rem',
+                  color: 'inherit',
+                  textDecoration: 'none',
+                }}
+              >
+                Join a community of visionaries and backers. Share your story,
+                get funded, and turn your passion into reality.
+              </Typography>
+
+              <Button
+                variant="contained"
+                sx={buttonStyles}
+                onClick={() => router.push('/dashboard')}
+              >
+                Start a Campaign
+              </Button>
+            </Stack>
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }} sx={{ padding: '2rem' }}>
+            <ImageList
+              sx={{ width: '100%', height: '450' }}
+              variant="woven"
+              cols={2}
+              gap={8}
+            >
+              {itemData.map((item) => (
+                <ImageListItem key={item.img}>
+                  <img
+                    srcSet={`${item.img}?w=161&fit=crop&auto=format&dpr=2 2x`}
+                    src={`${item.img}?w=161&fit=crop&auto=format`}
+                    alt={item.title}
+                    loading="lazy"
+                  />
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </Grid>
+        </Grid>
+      </Box>
+      <Box
+        sx={{
+          margin: '3rem 0',
+          padding: '2rem',
+        }}
+      >
+        <Typography
+          component="h2"
+          sx={{
+            mr: 2,
+            fontSize: '4rem',
+            width: '50%',
+            lineHeight: 1,
+            letterSpacing: '.01rem',
+            color: 'inherit',
+            marginBottom: '5rem',
+          }}
+        >
+          We’re proud to partner with the best
+        </Typography>
+        <Stack direction="row" spacing={2} justifyContent="space-between">
+          <Box sx={imgContainer}>
             <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/Featured/lig.png"
+              layout="fill"
+              style={imageStyle}
+              objectFit="contain"
+              alt="Picture of the author"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          </Box>
+
+          <Box sx={imgContainer}>
+            <Image
+              src="/Featured/horizon-partners.png"
+              layout="fill"
+              style={imageStyle}
+              objectFit="contain"
+              alt="Picture of the author"
+            />
+          </Box>
+
+          <Box sx={imgContainer}>
+            <Image
+              src="/Featured/keystone.png"
+              layout="fill"
+              style={imageStyle}
+              objectFit="contain"
+              alt="Picture of the author"
+            />
+          </Box>
+
+          <Box sx={imgContainer}>
+            <Image
+              src="/Featured/my-insurance-solutions.png"
+              layout="fill"
+              style={imageStyle}
+              objectFit="contain"
+              alt="Picture of the author"
+            />
+          </Box>
+
+          <Box sx={imgContainer}>
+            <Image
+              src="/Featured/tapestry.png"
+              layout="fill"
+              style={imageStyle}
+              objectFit="contain"
+              alt="Picture of the author"
+            />
+          </Box>
+        </Stack>
+      </Box>
+
+      <Box
+        sx={{
+          margin: '3rem 0',
+          padding: '2rem',
+          backgroundColor: 'secondary.main',
+        }}
+      >
+        <Typography
+          component="h2"
+          sx={{
+            mr: 2,
+            fontSize: '4rem',
+            width: '50%',
+            lineHeight: 1,
+            letterSpacing: '.01rem',
+            color: 'inherit',
+            marginBottom: '5rem',
+          }}
+        >
+          Popular Campaigns
+        </Typography>
+
+        {/* Center the Grid horizontally */}
+        <Grid
+          container
+          spacing={3}
+          sx={{ margin: '3rem', width: '100%' }}
+          justifyContent="center"
+        >
+          {popularCampaigns.map((campaign) => (
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={campaign.name}>
+              <CampaignCard
+                img={campaign.img}
+                name={campaign.name}
+                category={campaign.category}
+                amountRaised={campaign.amountRaised}
+                // Set the height and use flex for equal height
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                }}
+              />
+            </Grid>
+          ))}
+        </Grid>
+        <Box sx={{ width: '100%', textAlign: 'center' }}>
+          <Button
+            variant="outlined"
+            sx={buttonStyles}
+            onClick={() => router.push('/auth/login')}
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+            Explore All Campaigns
+          </Button>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          backgroundColor: 'primary.main',
+          color: 'primary.contrastText',
+          padding: '3rem 2rem',
+          mt: 'auto',
+        }}
+      >
+        <Grid container spacing={4} justifyContent="space-between">
+          {/* Logo and Description */}
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="#app-bar-with-responsive-menu"
+              sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontSize: '2.5rem',
+                fontWeight: 700,
+                letterSpacing: '.1rem',
+                color: 'primary.contrastText',
+                textDecoration: 'none',
+              }}
+            >
+              RISEFUNDS
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'inherit' }}>
+              Empowering independent agents with the tools and resources to grow
+              their businesses.
+            </Typography>
+          </Grid>
+
+          {/* Quick Links */}
+          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <Typography variant="subtitle1" gutterBottom>
+              Quick Links
+            </Typography>
+            <Link href="/" color="inherit" sx={{ display: 'block', mb: 1 }}>
+              Home
+            </Link>
+            <Link
+              href="/about"
+              color="inherit"
+              sx={{ display: 'block', mb: 1 }}
+            >
+              About Us
+            </Link>
+            <Link
+              href="/services"
+              color="inherit"
+              sx={{ display: 'block', mb: 1 }}
+            >
+              Services
+            </Link>
+            <Link
+              href="/contact"
+              color="inherit"
+              sx={{ display: 'block', mb: 1 }}
+            >
+              Contact
+            </Link>
+          </Grid>
+
+          {/* Resources */}
+          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+            <Typography variant="subtitle1" gutterBottom>
+              Resources
+            </Typography>
+            <Link href="/blog" color="inherit" sx={{ display: 'block', mb: 1 }}>
+              Blog
+            </Link>
+            <Link
+              href="/careers"
+              color="inherit"
+              sx={{ display: 'block', mb: 1 }}
+            >
+              Careers
+            </Link>
+            <Link href="/faq" color="inherit" sx={{ display: 'block', mb: 1 }}>
+              FAQ
+            </Link>
+          </Grid>
+
+          {/* Contact Information */}
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Typography variant="subtitle1" gutterBottom>
+              Contact Us
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#b0b0b0', mb: 1 }}>
+              Phone: (123) 456-7890
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#b0b0b0', mb: 1 }}>
+              Email: info@risefunds.com
+            </Typography>
+            <Button
+              variant="outlined"
+              color="secondary"
+              href="/contact"
+              sx={{
+                mt: 2,
+                textTransform: 'none',
+                padding: '10px 20px',
+                borderRadius: '8px',
+              }}
+            >
+              Get in Touch
+            </Button>
+          </Grid>
+        </Grid>
+
+        {/* Footer Bottom */}
+        <Box
+          sx={{
+            mt: 4,
+            pt: 2,
+            borderTop: '1px solid #555',
+            textAlign: 'center',
+          }}
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <Typography variant="body2" sx={{ color: '#b0b0b0' }}>
+            © 2024 RiseFunds. All rights reserved.
+          </Typography>
+        </Box>
+      </Box>
+    </NavigationLayout>
   );
 }
