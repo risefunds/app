@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Typography, List, ListItem, Link, Grid, TextField, Button, Container } from '@mui/material';
+import { Box, Typography, List, ListItem, Grid, TextField, Button, Container } from '@mui/material';
 import React from 'react';
 import { AuthLayout } from 'layouts/AuthLayout';
 import NextLink from 'next/link';
