@@ -9,7 +9,7 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: '#000',
+      main: '#131f5b',
       contrastText: '#f1f1f1',
     },
     secondary: {
@@ -59,6 +59,14 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderBottom: '1px solid #a9a9a9',
+        },
+      },
+    },
+
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
         },
       },
     },
