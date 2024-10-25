@@ -32,50 +32,18 @@ export const AppConsumerComponent: React.FC<{
     });
 
     const dbClient = new DBServiceClient();
-    if (process.env.NEXT_PUBLIC_ENV === 'local') {
-      dbClient.connectToEmulator();
-    }
+    // if (process.env.NEXT_PUBLIC_ENV === 'local') {
+    //   dbClient.connectToEmulator();
+    // }
     sdkServices.base.referenceService.db = dbClient;
     sdkServices.base.backendService.externalApi = process.env.NEXT_PUBLIC_API;
-
-    const subscribePlatformUser = async () => {
-      if (authUser?.uid) {
-        if (!platformUserSubscription.current || !platformUser) {
-          sdkServices.base.backendService.getAuthorization = async () => {
-            const jwt = await authUser.getIdToken();
-            const uid = authUser.uid;
-            return { uid, jwt };
-          };
-
-          platformUserSubscription.current =
-            await sdkServices.core.PlatformUserEntityService.subscribeDocument(
-              { id: authUser.uid },
-              async (error, dataPromise) => {
-                if (error) {
-                  console.error('Error fetching platform user:', error);
-                  return;
-                }
-                const platformUser = await dataPromise;
-                setPlatformUser(platformUser);
-              }
-            );
-        }
-      }
-    };
-
-    subscribePlatformUser();
 
     return () => unsubscribe(); // Cleanup the auth state change listener on unmount
   }, [authUser, sdkServices, platformUser, router]);
 
   return (
     <AppContextProvider>
-      <Component
-        {...pageProps}
-        authUser={authUser}
-        platformUser={platformUser}
-        sdkServices={sdkServices}
-      />
+      <Component {...pageProps} authUser={authUser} sdkServices={sdkServices} />
     </AppContextProvider>
   );
 };

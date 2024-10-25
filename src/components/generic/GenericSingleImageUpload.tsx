@@ -21,12 +21,11 @@ import React, {
 import { GenericSingleImageContext } from '../GenericSingleImageContext';
 import { useDropzone } from 'react-dropzone';
 import {
-  getStorage,
   ref as storageRef,
   uploadBytesResumable,
   getDownloadURL,
-  connectStorageEmulator,
 } from 'firebase/storage';
+import { storage } from 'utils/firebaseConfig';
 
 import theme from 'utils/theme';
 import { GenericTextField } from './TextField/GenericTextField';
@@ -144,17 +143,12 @@ export const GenericSingleImageUpload: React.FC<
             });
 
             if (autoUpload) {
-              const storage = getStorage();
-              if (process.env.NEXT_PUBLIC_ENV === 'local') {
-                connectStorageEmulator(storage, 'localhost', 9199);
-              }
-
               const fileId = v4();
               const fileRef = storageRef(
                 storage,
                 `${
-                  process.env.NEXT_PUBLIC_BUCKET ||
-                  'n3-db-webapp-dev.appspot.com'
+                  process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
+                  'risefunds.appspot.com'
                 }/${fileId}`
               );
 
