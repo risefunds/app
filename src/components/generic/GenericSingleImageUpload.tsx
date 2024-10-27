@@ -1,12 +1,12 @@
 import { Delete, Image as ImageIcon, Remove } from '@mui/icons-material';
 import {
-  Grid,
   Box,
   ListItemText,
   IconButton,
   Typography,
   Alert,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import LinearProgress, {
   LinearProgressProps,
 } from '@mui/material/LinearProgress';
@@ -261,7 +261,7 @@ export const GenericSingleImageUpload: React.FC<
               justifyContent="center"
               sx={{ width: '100%', height: '100%' }}
             >
-              <Grid item {...(props.config?.width ? {} : { xs: 12 })}>
+              <Grid size={{ ...(props.config?.width ? {} : { xs: 12 }) }}>
                 <>
                   <Box
                     sx={{
@@ -281,10 +281,11 @@ export const GenericSingleImageUpload: React.FC<
                       layout="fill"
                       placeholder="blur"
                       blurDataURL="/images/partner/partner1.jpg"
-                      style={{
-                        width: props.config.width ?? '100%',
-                        height: props.config.height ?? clientHeight ?? '100%',
-                      }}
+                      sizes={`
+                        (max-width: 768px) ${props.config.width || '100%'},
+                        (max-width: 1200px) ${props.config.width || '50%'}, 
+                        ${props.config.width || '33%'}
+                      `}
                     />
 
                     <Box
@@ -314,7 +315,7 @@ export const GenericSingleImageUpload: React.FC<
                         justifyContent={'center'}
                         sx={{ height: '100%' }}
                       >
-                        <Grid item>
+                        <Grid>
                           <IconButton
                             onClick={() => {
                               setLoading(true);
@@ -354,7 +355,7 @@ export const GenericSingleImageUpload: React.FC<
           height="100%"
           sx={{ minHeight: props.config.height ?? clientHeight ?? 500 }}
         >
-          <Grid item sx={{ textAlign: 'center', cursor: 'pointer' }}>
+          <Grid sx={{ textAlign: 'center', cursor: 'pointer' }}>
             {placeholderIcon}
             <ListItemText
               primaryTypographyProps={{ variant: 'body2' }}

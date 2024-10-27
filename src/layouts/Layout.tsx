@@ -1,5 +1,5 @@
-import { ArrowUpward } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import IconButton from '@mui/material/IconButton';
 import React, { ReactNode } from 'react';
 
 interface LayoutProps {
@@ -18,7 +18,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         >
-          <ArrowUpward />
+          <ArrowUpwardIcon />
         </IconButton>
         {children}
       </div>
