@@ -1,7 +1,8 @@
 'use client';
 
 import { Box, Typography, List, ListItem, Link, Grid } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from 'context/AppContext';
 import { AuthLayout } from 'layouts/AuthLayout';
 import NextLink from 'next/link';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -10,7 +11,10 @@ import { useRouter } from 'next/navigation';
 import { FormBuilderJSON } from 'components/FormBuilder';
 
 const LoginPage: React.FC = () => {
+  const appContext = useContext(AppContext);
   const router = useRouter();
+
+  console.log({ appContext });
 
   return (
     <>
@@ -71,7 +75,8 @@ const LoginPage: React.FC = () => {
                 );
                 router.push('/dashboard'); // Redirect to the dashboard upon successful login
               } catch (error: any) {
-                console.log(error.message); // Handle errors
+                console.log(error);
+                appContext.helper.showError(error);
               }
             },
           }}

@@ -5,6 +5,8 @@ import {
   signOut,
   User,
 } from 'firebase/auth';
+import { AppContext } from 'context/AppContext';
+import { useContext } from 'react';
 
 export type FirebaseUser = User;
 
@@ -22,10 +24,12 @@ export const signInWithEmailLinkHandler = async (
 
 export const signInWithCustomTokenHandler = async (customToken: string) => {
   const auth = getAuth();
+  const appContext = useContext(AppContext);
   try {
     await signInWithCustomToken(auth, customToken);
   } catch (error) {
     console.error('Error during custom token sign-in:', error);
+    appContext.helper.showError(error);
   }
 };
 

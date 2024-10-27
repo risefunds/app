@@ -49,6 +49,7 @@ const SignupPage: React.FC = () => {
               router.push('/dashboard');
             } catch (error: any) {
               console.log(error.message);
+              appContext.helper.showError(error);
             }
           },
         }}

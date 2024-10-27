@@ -14,6 +14,8 @@ import {
   signOutHandler,
   FirebaseUser,
 } from 'utils/FirebaseAuth';
+import { signInWithCustomToken } from 'firebase/auth';
+import { auth } from 'utils/firebaseConfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
   useWidth,
@@ -47,19 +49,14 @@ export interface IAppContextHelper {
 }
 
 const defaultHelper: IAppContextHelper = {
-  showSnackbar: function (
-    message: string,
-    variant?: VariantType,
-    duration?: number,
-    moreOptions?: OptionsObject
-  ): void {
-    throw new Error('Function not implemented.');
+  showSnackbar(message, variant, duration, moreOptions = {}) {
+    console.log(message);
   },
-  showError: function (error: unknown, persist?: boolean): void {
-    throw new Error('Function not implemented.');
+  showError(message, persist = false) {
+    console.log(message);
   },
-  showSuccess: function (message: string): void {
-    throw new Error('Function not implemented.');
+  showSuccess(message) {
+    console.log(message);
   },
   isSU: false,
   isMobile: false,
@@ -77,8 +74,14 @@ const defaultHelper: IAppContextHelper = {
   signInWithEmailLink: function (link: string): Promise<void> {
     throw new Error('Function not implemented.');
   },
-  signInWithCustomToken: function (customToken: string): Promise<void> {
-    throw new Error('Function not implemented.');
+  signInWithCustomToken: async function (customToken: string): Promise<void> {
+    try {
+      await signInWithCustomToken(auth, customToken);
+      console.log('Signed in with custom token successfully.');
+    } catch (error) {
+      console.error('Error signing in with custom token:', error);
+      this.showError('Failed to sign in with the provided token.');
+    }
   },
   setLocalStoreValue: function (key: string, value: any): void {
     throw new Error('Function not implemented.');
@@ -150,6 +153,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
                 setPlatformUser(platformUser);
               } catch (error) {
                 console.error('Error fetching platform user:', error);
+                helper.showError((error as Error).message);
                 setPlatformUser(undefined); // Reset on error
               } finally {
                 setAuthUserLoading(false);
