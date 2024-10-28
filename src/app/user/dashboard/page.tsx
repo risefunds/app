@@ -5,7 +5,7 @@ import { useAuth } from 'hooks/useAuth';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { ProfileLayout } from 'layouts/ProfileLayout';
-// import CampaignLayout from 'layouts/CampaignLayout';
+import CampaignLayout from 'components/CampaignLayout';
 import UserProfile from 'components/UserProfile';
 import { NavigationLayout } from 'layouts/NavigationLayout';
 import Box from '@mui/material/Box';
@@ -49,12 +49,7 @@ export default function Dashboard() {
           <UserProfile />
         </ProfileLayout>
       )}
-      {selectedTab === 1 && (
-        // <CampaignLayout pageTitle="User Campaigns">
-        //   <UserCampaign />
-        // </CampaignLayout>
-        <h1>Na wedy here</h1>
-      )}
+      {selectedTab === 1 && <CampaignLayout />}
     </NavigationLayout>
   );
 }

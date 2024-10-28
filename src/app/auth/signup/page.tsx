@@ -12,8 +12,6 @@ const SignupPage: React.FC = () => {
   const appContext = useContext(AppContext);
   const router = useRouter();
 
-  console.log({ appContext });
-
   // Redirect to the homepage if the user is already logged in
   useEffect(() => {
     if (appContext.helper.firebaseUser) {

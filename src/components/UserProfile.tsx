@@ -52,6 +52,7 @@ const UserProfile = () => {
       }
 
       setLoading(false);
+      console.log({ appContext });
     };
     if (appContext.helper.platformUser) getCreativeUser();
   }, [appContext.helper.platformUser]);

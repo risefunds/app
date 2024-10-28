@@ -14,8 +14,6 @@ const LoginPage: React.FC = () => {
   const appContext = useContext(AppContext);
   const router = useRouter();
 
-  console.log({ appContext });
-
   return (
     <>
       <AuthLayout pageTitle="Creative Connect">
