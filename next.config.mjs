@@ -2,16 +2,20 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: [
-      'localhost',
-      'images.unsplash.com',
-      'firebasestorage.googleapis.com',
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+      },
     ],
-  },
-  experimental: {
-    images: {
-      layoutRaw: true,
-    },
   },
   publicRuntimeConfig: {
     NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV,

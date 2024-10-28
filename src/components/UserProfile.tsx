@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AppContext } from 'context/AppContext';
 import { useAuth } from 'hooks/useAuth';
-import { NavigationLayout } from 'layouts/NavigationLayout';
 import { formSchemas, models } from '@risefunds/sdk';
 import { ProfileLayout } from 'layouts/ProfileLayout';
 import { useRouter } from 'next/navigation';
@@ -72,41 +71,38 @@ const UserProfile = () => {
   }
 
   return (
-    <NavigationLayout>
-      <ProfileLayout pageTitle="Register">
-        <Typography
-          component="h2"
-          sx={{
-            mr: 2,
-            fontSize: '2rem',
-            fontWeight: 500,
-            lineHeight: 1,
-            letterSpacing: '.08rem',
-            color: 'secondary.contrastText',
-            textDecoration: 'none',
-          }}
-        >
-          Welcome {user.email}
-        </Typography>
+    <ProfileLayout pageTitle="Register">
+      <Typography
+        component="h2"
+        sx={{
+          mr: 2,
+          fontSize: '2rem',
+          fontWeight: 500,
+          lineHeight: 1,
+          letterSpacing: '.08rem',
+          color: 'secondary.contrastText',
+          textDecoration: 'none',
+        }}
+      >
+        Welcome {user.email}
+      </Typography>
 
-        <FormBuilderJSON
-          FormBuilderProps={{
-            initialValues: { ...getValues() },
-            onSubmit: async (values) => {
-              try {
-                if (!creativeUser)
-                  throw new Error('Creative user not resolved');
-                creativeUser.details = { ...creativeUser.details, ...values };
-                await appContext.sdkServices?.core.CreativeUserEntityService.persist(
-                  creativeUser
-                );
-              } catch (error) {}
-            },
-          }}
-          schema={formSchemas.CreativeProfile.getSchema()}
-        />
-      </ProfileLayout>
-    </NavigationLayout>
+      <FormBuilderJSON
+        FormBuilderProps={{
+          initialValues: { ...getValues() },
+          onSubmit: async (values) => {
+            try {
+              if (!creativeUser) throw new Error('Creative user not resolved');
+              creativeUser.details = { ...creativeUser.details, ...values };
+              await appContext.sdkServices?.core.CreativeUserEntityService.persist(
+                creativeUser
+              );
+            } catch (error) {}
+          },
+        }}
+        schema={formSchemas.CreativeProfile.getSchema()}
+      />
+    </ProfileLayout>
   );
 };
 

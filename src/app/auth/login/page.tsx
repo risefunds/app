@@ -73,7 +73,7 @@ const LoginPage: React.FC = () => {
                   values.email,
                   values.password
                 );
-                router.push('/dashboard'); // Redirect to the dashboard upon successful login
+                router.push('/user/dashboard');
               } catch (error: any) {
                 console.log(error);
                 appContext.helper.showError(error);
