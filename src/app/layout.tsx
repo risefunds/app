@@ -2,6 +2,7 @@
 
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import { SnackbarProvider } from 'notistack';
 import theme from 'utils/theme';
 import AppConsumerComponent from '../components/AppConsumer';
 
@@ -15,12 +16,16 @@ export default function RootLayout({
       <body>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {/* Wrap the entire layout with AppConsumerComponent */}
-            <AppConsumerComponent
-              Component={() => <>{children}</>}
-              pageProps={{}}
-            />
+            <SnackbarProvider
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+              <CssBaseline />
+              {/* Wrap the entire layout with AppConsumerComponent */}
+              <AppConsumerComponent
+                Component={() => <>{children}</>}
+                pageProps={{}}
+              />
+            </SnackbarProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

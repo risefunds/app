@@ -144,7 +144,7 @@ export default function Home() {
               <Button
                 variant="contained"
                 sx={buttonStyles}
-                onClick={() => router.push('/dashboard')}
+                onClick={() => router.push('/user/dashboard')}
               >
                 Start a Campaign
               </Button>

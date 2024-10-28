@@ -26,6 +26,7 @@ export const signInWithCustomTokenHandler = async (customToken: string) => {
     await signInWithCustomToken(auth, customToken);
   } catch (error) {
     console.error('Error during custom token sign-in:', error);
+    // appContext.helper.showError(error);
   }
 };
 

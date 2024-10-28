@@ -1,12 +1,12 @@
 import { Delete, Image as ImageIcon, Remove } from '@mui/icons-material';
 import {
-  Grid,
   Box,
   ListItemText,
   IconButton,
   Typography,
   Alert,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import LinearProgress, {
   LinearProgressProps,
 } from '@mui/material/LinearProgress';
@@ -21,12 +21,11 @@ import React, {
 import { GenericSingleImageContext } from '../GenericSingleImageContext';
 import { useDropzone } from 'react-dropzone';
 import {
-  getStorage,
   ref as storageRef,
   uploadBytesResumable,
   getDownloadURL,
-  connectStorageEmulator,
 } from 'firebase/storage';
+import { storage } from 'utils/firebaseConfig';
 
 import theme from 'utils/theme';
 import { GenericTextField } from './TextField/GenericTextField';
@@ -144,17 +143,12 @@ export const GenericSingleImageUpload: React.FC<
             });
 
             if (autoUpload) {
-              const storage = getStorage();
-              if (process.env.NEXT_PUBLIC_ENV === 'local') {
-                connectStorageEmulator(storage, 'localhost', 9199);
-              }
-
               const fileId = v4();
               const fileRef = storageRef(
                 storage,
                 `${
-                  process.env.NEXT_PUBLIC_BUCKET ||
-                  'n3-db-webapp-dev.appspot.com'
+                  process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
+                  'risefunds.appspot.com'
                 }/${fileId}`
               );
 
@@ -267,7 +261,7 @@ export const GenericSingleImageUpload: React.FC<
               justifyContent="center"
               sx={{ width: '100%', height: '100%' }}
             >
-              <Grid item {...(props.config?.width ? {} : { xs: 12 })}>
+              <Grid size={{ ...(props.config?.width ? {} : { xs: 12 }) }}>
                 <>
                   <Box
                     sx={{
@@ -287,10 +281,11 @@ export const GenericSingleImageUpload: React.FC<
                       layout="fill"
                       placeholder="blur"
                       blurDataURL="/images/partner/partner1.jpg"
-                      style={{
-                        width: props.config.width ?? '100%',
-                        height: props.config.height ?? clientHeight ?? '100%',
-                      }}
+                      sizes={`
+                        (max-width: 768px) ${props.config.width || '100%'},
+                        (max-width: 1200px) ${props.config.width || '50%'}, 
+                        ${props.config.width || '33%'}
+                      `}
                     />
 
                     <Box
@@ -320,7 +315,7 @@ export const GenericSingleImageUpload: React.FC<
                         justifyContent={'center'}
                         sx={{ height: '100%' }}
                       >
-                        <Grid item>
+                        <Grid>
                           <IconButton
                             onClick={() => {
                               setLoading(true);
@@ -360,7 +355,7 @@ export const GenericSingleImageUpload: React.FC<
           height="100%"
           sx={{ minHeight: props.config.height ?? clientHeight ?? 500 }}
         >
-          <Grid item sx={{ textAlign: 'center', cursor: 'pointer' }}>
+          <Grid sx={{ textAlign: 'center', cursor: 'pointer' }}>
             {placeholderIcon}
             <ListItemText
               primaryTypographyProps={{ variant: 'body2' }}

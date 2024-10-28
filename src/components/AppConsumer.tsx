@@ -17,6 +17,7 @@ export const AppConsumerComponent: React.FC<{
   >();
   const sdkServices = useMemo(() => getSDKServices(), []);
   const platformUserSubscription = useRef<Function | undefined>();
+  const [loading, setLoading] = useState(true); // Loading state to prevent mismatches during SSR
 
   useEffect(() => {
     const auth = getAuth();
@@ -27,55 +28,26 @@ export const AppConsumerComponent: React.FC<{
         setAuthUser(user);
       } else {
         setAuthUser(null);
-        router.push('/auth/login'); // Redirect to login if not authenticated
+        router.push('/auth/login');
       }
+      setLoading(false);
     });
 
     const dbClient = new DBServiceClient();
-    if (process.env.NEXT_PUBLIC_ENV === 'local') {
-      dbClient.connectToEmulator();
-    }
     sdkServices.base.referenceService.db = dbClient;
     sdkServices.base.backendService.externalApi = process.env.NEXT_PUBLIC_API;
 
-    const subscribePlatformUser = async () => {
-      if (authUser?.uid) {
-        if (!platformUserSubscription.current || !platformUser) {
-          sdkServices.base.backendService.getAuthorization = async () => {
-            const jwt = await authUser.getIdToken();
-            const uid = authUser.uid;
-            return { uid, jwt };
-          };
-
-          platformUserSubscription.current =
-            await sdkServices.core.PlatformUserEntityService.subscribeDocument(
-              { id: authUser.uid },
-              async (error, dataPromise) => {
-                if (error) {
-                  console.error('Error fetching platform user:', error);
-                  return;
-                }
-                const platformUser = await dataPromise;
-                setPlatformUser(platformUser);
-              }
-            );
-        }
-      }
-    };
-
-    subscribePlatformUser();
-
     return () => unsubscribe(); // Cleanup the auth state change listener on unmount
-  }, [authUser, sdkServices, platformUser, router]);
+  }, [sdkServices, router]);
+
+  // Render a loading state while the Firebase auth state is being determined
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <AppContextProvider>
-      <Component
-        {...pageProps}
-        authUser={authUser}
-        platformUser={platformUser}
-        sdkServices={sdkServices}
-      />
+      <Component {...pageProps} authUser={authUser} sdkServices={sdkServices} />
     </AppContextProvider>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Layout } from './Layout';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -67,24 +68,36 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
         <AppBar position="static" color="secondary">
           <Container maxWidth="xl">
             <Toolbar disableGutters sx={{ height: '90px' }}>
-              <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-              <Typography
-                variant="h6"
-                noWrap
-                component="a"
-                href="#app-bar-with-responsive-menu"
-                sx={{
-                  mr: 2,
-                  display: { xs: 'none', md: 'flex' },
-                  fontSize: '2.5rem',
-                  fontWeight: 700,
-                  letterSpacing: '.1rem',
-                  color: 'secondary.contrastText',
-                  textDecoration: 'none',
-                }}
+              <Link
+                href="/"
+                passHref
+                style={{ color: 'inherit', textDecoration: 'none' }}
               >
-                RISEFUNDS
-              </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <AdbIcon
+                    sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}
+                  />
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    sx={{
+                      mr: 2,
+                      display: { xs: 'none', md: 'flex' },
+                      fontSize: '2.5rem',
+                      fontWeight: 700,
+                      letterSpacing: '.1rem',
+                      color: 'secondary.contrastText', // Styled color
+                    }}
+                  >
+                    RISEFUNDS
+                  </Typography>
+                </Box>
+              </Link>
 
               <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                 <IconButton
@@ -170,7 +183,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                     <Button
                       variant="contained"
                       sx={buttonStyles}
-                      onClick={() => router.push('/dashboard')}
+                      onClick={() => router.push('/user/dashboard')}
                     >
                       Start a Campaign
                     </Button>

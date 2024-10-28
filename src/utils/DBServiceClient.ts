@@ -31,11 +31,11 @@ export class DBServiceClient implements IReferenceDB {
     return object.toDate();
   }
 
-  connectToEmulator() {
-    if (process.env.NEXT_PUBLIC_ENV === 'local') {
-      connectFirestoreEmulator(this.firestoreInstance, 'localhost', 8080);
-    }
-  }
+  // connectToEmulator() {
+  //   if (process.env.NEXT_PUBLIC_ENV === 'local') {
+  //     connectFirestoreEmulator(this.firestoreInstance, 'localhost', 8080);
+  //   }
+  // }
 
   isAdmin = false;
 
