@@ -144,7 +144,7 @@ export default function Home() {
               <Button
                 variant="contained"
                 sx={buttonStyles}
-                onClick={() => router.push('/user/dashboard')}
+                onClick={() => router.push('/user/dashboard?tab=campaign')}
               >
                 Start a Campaign
               </Button>
@@ -294,7 +294,7 @@ export default function Home() {
           <Button
             variant="outlined"
             sx={buttonStyles}
-            onClick={() => router.push('/auth/login')}
+            onClick={() => router.push('/')}
           >
             Explore All Campaigns
           </Button>
@@ -316,7 +316,6 @@ export default function Home() {
               variant="h6"
               noWrap
               component="a"
-              href="#app-bar-with-responsive-menu"
               sx={{
                 mr: 2,
                 display: { xs: 'none', md: 'flex' },

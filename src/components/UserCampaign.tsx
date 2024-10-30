@@ -19,7 +19,7 @@ import { FormBuilderJSON } from 'components/FormBuilder';
 import { AppContext } from 'context/AppContext';
 import { formSchemas, models } from '@risefunds/sdk';
 
-const CampaignLayout = () => {
+const UserCampaign = () => {
   const appContext = useContext(AppContext);
   const [creativeUser, setCreativeUser] = useState<
     models.CreativeUserEntityModel | undefined
@@ -38,7 +38,7 @@ const CampaignLayout = () => {
 
   // Fetch campaigns on load
   useEffect(() => {
-    const getCreativeUserCampaigns = async () => {
+    const getCreativeUserCampaigns: () => Promise<void> = async () => {
       try {
         setLoading(true);
         if (!appContext.helper.platformUser)
@@ -82,12 +82,21 @@ const CampaignLayout = () => {
       setLoading(false);
     };
     if (appContext.helper.platformUser) getCreativeUserCampaigns();
-  }, [appContext.helper.platformUser?.id, creativeUser?.id]);
+  }, [appContext.helper.platformUser?.id, creativeUser?.id, campaigns]);
+
+  // show the form only after selectedCampaign is set
+  useEffect(() => {
+    if (selectedCampaign === undefined && showForm) {
+      setShowForm(true);
+    } else if (selectedCampaign) {
+      setShowForm(true);
+    }
+  }, [selectedCampaign]);
 
   // Handler to add a new campaign
   const handleAddCampaign = async () => {
-    setShowForm(true);
     setSelectedCampaign(undefined); // Reset selected campaign to create new one
+    setShowForm(false);
     try {
       // Create a new campaign
       setLoading(true);
@@ -103,7 +112,7 @@ const CampaignLayout = () => {
           })
         );
 
-      setCurrentCampaign(campaignCol);
+      setSelectedCampaign(campaignCol);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -112,90 +121,56 @@ const CampaignLayout = () => {
 
   // Handler to select a campaign for editing
   const handleSelectCampaign = (campaign: models.CampaignEntityModel) => {
+    setShowForm(false); // Hide the form initially
     setSelectedCampaign(campaign);
-    setShowForm(true);
   };
 
   // Handler to save a campaign
   const handleSaveCampaign = async (values: models.CampaignEntityModel) => {
     try {
+      setLoading(true);
+      if (!creativeUser) throw new Error('Creative user not resolved.');
+
       if (selectedCampaign) {
         // Update an existing campaign
         // selectedCampaign.details = { ...selectedCampaign, ...values };
+        console.log({ selectedCampaign });
+
+        selectedCampaign.campaignTitle = values.campaignTitle;
+        selectedCampaign.campaignTagline = values.campaignTagline;
+        selectedCampaign.campaignCategory = values.campaignCategory;
+        selectedCampaign.campaignTags = values.campaignTags;
+        selectedCampaign.campaignLocation = values.campaignLocation;
+        selectedCampaign.campaignDuration = values.campaignDuration;
+        selectedCampaign.campaignCard = values.campaignCard;
+
         await appContext.sdkServices?.core.CampaignEntityService.persist(
           selectedCampaign
         );
-      } else {
-        // Create a new campaign
-        setLoading(true);
-        // if (!appContext.helper.platformUser || !creativeUser)
-        //   throw new Error('User not resolved.');
-
-        // const campaignCol =
-        //   await appContext.sdkServices?.core.CampaignEntityService.persist(
-        //     new models.CampaignEntityModel({
-        //       [appContext.helper.platformUser.collection]:
-        //         appContext.helper.platformUser.id,
-        //       [creativeUser.collection]: creativeUser.id,
-        //     })
-        //   );
-
-        // setCurrentCampaign(campaignCol);
-
-        if (!creativeUser) throw new Error('Creative user not resolved.');
-        if (!currentCampaign) throw new Error('current Campaign not resolved.');
-
-        currentCampaign.campaignTitle = values.campaignTitle;
-        currentCampaign.campaignTagline = values.campaignTagline;
-        currentCampaign.campaignCategory = values.campaignCategory;
-        currentCampaign.campaignTags = values.campaignTags;
-        currentCampaign.campaignDuration = values.campaignDuration;
-        currentCampaign.campaignCard = values.campaignCard;
-
-        await appContext.sdkServices?.core.CampaignEntityService.persist(
-          currentCampaign
-        );
-
-        const listedCampaigns =
-          await appContext.sdkServices?.core.CampaignEntityService.where({
-            params: [
-              {
-                key: 'parentReference.CreativeUser',
-                value: creativeUser.id,
-                operator: '==',
-              },
-              {
-                key: 'archive',
-                value: false,
-                operator: '==',
-              },
-            ],
-          });
-
-        if (listedCampaigns) {
-          setCampaigns(listedCampaigns);
-        }
-
-        //   const campaignColToAddCampaign = listedCampaigns.find(
-        //     (campaign: models.CampaignEntityModel) =>
-        //       campaign.id === campaignCol?.id
-        //   );
-
-        //   if (!campaignColToAddCampaign)
-        //     throw new Error('Campaign not resolved.');
-
-        //   const sss = {...campaignColToAddCampaign, ...values};
-
-        //   await appContext.sdkServices?.core.CampaignEntityService.persist(
-        //      sss
-        //   );
-
-        //   setLoading(false);
-        // }
-
-        setLoading(false);
       }
-      setShowForm(false);
+      const listedCampaigns =
+        await appContext.sdkServices?.core.CampaignEntityService.where({
+          params: [
+            {
+              key: 'parentReference.CreativeUser',
+              value: creativeUser.id,
+              operator: '==',
+            },
+            {
+              key: 'archive',
+              value: false,
+              operator: '==',
+            },
+          ],
+        });
+
+      if (listedCampaigns) {
+        setCampaigns(listedCampaigns);
+      }
+      appContext.helper.showSuccess('Campaign Saved');
+      setLoading(false);
+      // setShowForm(false);
+      setSelectedCampaign(undefined);
     } catch (error) {
       appContext.helper.showError(error);
     }
@@ -257,9 +232,7 @@ const CampaignLayout = () => {
             {showForm ? (
               <FormBuilderJSON
                 FormBuilderProps={{
-                  initialValues: selectedCampaign
-                    ? selectedCampaign.campaignTitle
-                    : {},
+                  initialValues: selectedCampaign ? selectedCampaign : {},
                   onSubmit: async (values: any) => {
                     await handleSaveCampaign(values);
                   },
@@ -276,4 +249,4 @@ const CampaignLayout = () => {
   );
 };
 
-export default CampaignLayout;
+export default UserCampaign;
