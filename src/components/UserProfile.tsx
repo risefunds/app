@@ -98,7 +98,10 @@ const UserProfile = () => {
               await appContext.sdkServices?.core.CreativeUserEntityService.persist(
                 creativeUser
               );
-            } catch (error) {}
+              appContext.helper.showSuccess('Success');
+            } catch (error) {
+              appContext.helper.showError('Profile update failed');
+            }
           },
         }}
         schema={formSchemas.CreativeProfile.getSchema()}

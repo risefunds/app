@@ -71,6 +71,7 @@ const LoginPage: React.FC = () => {
                   values.email,
                   values.password
                 );
+                appContext.helper.showSuccess('Login Success');
                 router.push('/user/dashboard');
               } catch (error: any) {
                 console.log(error);
