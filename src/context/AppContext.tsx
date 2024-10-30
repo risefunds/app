@@ -4,6 +4,7 @@ import React, {
   useReducer,
   useState,
   useEffect,
+  useRef,
 } from 'react';
 import { useSnackbar, VariantType, OptionsObject } from 'notistack';
 import { models, ISDKServices, getSDKServices } from '@risefunds/sdk';
@@ -13,6 +14,8 @@ import {
   signOutHandler,
   FirebaseUser,
 } from 'utils/FirebaseAuth';
+import { signInWithCustomToken } from 'firebase/auth';
+import { auth } from 'utils/firebaseConfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
   useWidth,
@@ -40,26 +43,20 @@ export interface IAppContextHelper {
   signOut: () => Promise<void>;
   signInWithEmailLink: (link: string) => Promise<void>;
   signInWithCustomToken: (customToken: string) => Promise<void>;
-
   setLocalStoreValue: (key: string, value: any) => void;
   deleteLocalStoreValue: (key: string) => void;
   getLocalStoreValue: (key: string) => any | undefined;
 }
 
 const defaultHelper: IAppContextHelper = {
-  showSnackbar: function (
-    message: string,
-    variant?: VariantType,
-    duration?: number,
-    moreOptions?: OptionsObject
-  ): void {
-    throw new Error('Function not implemented.');
+  showSnackbar(message, variant, duration, moreOptions = {}) {
+    console.log(message);
   },
-  showError: function (error: unknown, persist?: boolean): void {
-    throw new Error('Function not implemented.');
+  showError(message, persist = false) {
+    console.log(message);
   },
-  showSuccess: function (message: string): void {
-    throw new Error('Function not implemented.');
+  showSuccess(message) {
+    console.log(message);
   },
   isSU: false,
   isMobile: false,
@@ -77,8 +74,14 @@ const defaultHelper: IAppContextHelper = {
   signInWithEmailLink: function (link: string): Promise<void> {
     throw new Error('Function not implemented.');
   },
-  signInWithCustomToken: function (customToken: string): Promise<void> {
-    throw new Error('Function not implemented.');
+  signInWithCustomToken: async function (customToken: string): Promise<void> {
+    try {
+      await signInWithCustomToken(auth, customToken);
+      console.log('Signed in with custom token successfully.');
+    } catch (error) {
+      console.error('Error signing in with custom token:', error);
+      this.showError('Failed to sign in with the provided token.');
+    }
   },
   setLocalStoreValue: function (key: string, value: any): void {
     throw new Error('Function not implemented.');
@@ -123,21 +126,53 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Initialize SDK services here
   const sdkServices = useMemo(() => getSDKServices(), []);
+  const platformUserSubscription = useRef<Function | undefined>();
 
-  // Track Firebase auth state
+  // Track Firebase auth state and subscribe to platformUser
   useEffect(() => {
     const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setFirebaseUser(user);
+        setAuthUserLoading(true);
+
+        // Subscribe to platform user after successful authentication
+        sdkServices.base.backendService.getAuthorization = async () => {
+          const jwt = await user.getIdToken();
+          return { uid: user.uid, jwt };
+        };
+
+        platformUserSubscription.current =
+          await sdkServices.core.PlatformUserEntityService.subscribeDocument(
+            { id: user.uid },
+            async (error, dataPromise) => {
+              try {
+                if (error) throw error;
+                const platformUser = await dataPromise;
+                setPlatformUser(platformUser);
+              } catch (error) {
+                console.error('Error fetching platform user:', error);
+                helper.showError((error as Error).message);
+                setPlatformUser(undefined); // Reset on error
+              } finally {
+                setAuthUserLoading(false);
+              }
+            }
+          );
       } else {
         setFirebaseUser(undefined);
+        setPlatformUser(undefined);
+        sdkServices.base.backendService.getAuthorization = undefined;
+        setAuthUserLoading(false);
       }
-      setAuthUserLoading(false);
     });
 
-    return () => unsubscribe(); // Cleanup on unmount
-  }, []);
+    return () => {
+      if (platformUserSubscription.current) platformUserSubscription.current();
+      unsubscribe(); // Cleanup Firebase auth state change listener
+    };
+  }, [sdkServices]);
 
   const helper: IAppContextHelper = useMemo(() => {
     return {
@@ -162,7 +197,8 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
       authUserLoading,
       height,
       width,
-      firebaseUser, // Add firebaseUser to the helper
+      firebaseUser,
+      platformUser, // Add platformUser to helper
       setPlatformUser,
       signOut: signOutHandler, // Use the custom signOutHandler
       signInWithEmailLink: async (link: string) => {
@@ -199,6 +235,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
     authUserLoading,
     firebaseUser,
     localStore,
+    platformUser,
   ]);
 
   return (

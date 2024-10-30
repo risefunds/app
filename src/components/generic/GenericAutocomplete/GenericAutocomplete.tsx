@@ -1,11 +1,9 @@
-import {
-  Autocomplete,
-  ListItemText,
-  Chip,
-  createFilterOptions,
-  Typography,
-  MenuItem,
-} from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import ListItemText from '@mui/material/ListItemText';
+import Chip from '@mui/material/Chip';
+import { createFilterOptions } from '@mui/material/Autocomplete';
+import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
 import React from 'react';
 import { GenericTextField } from '../TextField/GenericTextField';
 
@@ -79,7 +77,7 @@ export const GenericAutocomplete: React.FC<IGenericAutocomplete> = ({
 
           const { inputValue } = state;
           const isExisting = options.some(
-            (option) => inputValue === option.value,
+            (option) => inputValue === option.value
           );
           if (props.Config?.addMore)
             if (inputValue !== '' && !isExisting) {

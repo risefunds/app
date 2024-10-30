@@ -12,8 +12,6 @@ const SignupPage: React.FC = () => {
   const appContext = useContext(AppContext);
   const router = useRouter();
 
-  console.log({ appContext });
-
   // Redirect to the homepage if the user is already logged in
   useEffect(() => {
     if (appContext.helper.firebaseUser) {
@@ -46,9 +44,10 @@ const SignupPage: React.FC = () => {
               await appContext.helper.signInWithCustomToken(
                 signupResponse.customToken
               );
-              router.push('/dashboard');
+              router.push('/user/dashboard');
             } catch (error: any) {
-              console.log(error.message); // Handle errors
+              console.log(error.message);
+              appContext.helper.showError(error);
             }
           },
         }}
