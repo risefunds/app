@@ -17,8 +17,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Stack from '@mui/material/Stack';
+import { LogoGraphic } from 'components/Graphics/LogoGraphic';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages: [] = [];
 const settings = ['Profile', 'Campaign', 'Logout'];
 
 export interface INavigationLayoutProps {
@@ -82,23 +83,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                     alignItems: 'center',
                   }}
                 >
-                  <AdbIcon
-                    sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}
-                  />
-                  <Typography
-                    variant="h6"
-                    noWrap
-                    sx={{
-                      mr: 2,
-                      display: { xs: 'none', md: 'flex' },
-                      fontSize: '2.5rem',
-                      fontWeight: 700,
-                      letterSpacing: '.1rem',
-                      color: 'secondary.contrastText', // Styled color
-                    }}
-                  >
-                    RISEFUNDS
-                  </Typography>
+                  <LogoGraphic />
                 </Box>
               </Link>
 
