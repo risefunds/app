@@ -45,7 +45,7 @@ const SignupPage: React.FC = () => {
                 signupResponse.customToken
               );
               appContext.helper.showSuccess('Sign up Success');
-              router.push('/user/dashboard');
+              router.push('/');
             } catch (error: any) {
               console.log(error.message);
               appContext.helper.showError(error);

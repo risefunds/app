@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useContext } from 'react';
 import { useAuth } from 'hooks/useAuth';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { ProfileLayout } from 'layouts/ProfileLayout';
@@ -10,18 +11,30 @@ import UserProfile from 'components/UserProfile';
 import { NavigationLayout } from 'layouts/NavigationLayout';
 import Box from '@mui/material/Box';
 
-// import UserCampaign from 'components/UserCampaign';
-
 export default function Dashboard() {
-  const { user, appContext } = useAuth();
+  const { user } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
+  // State to control selected tab
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const handleTabChange = (
-    event: any,
-    newValue: React.SetStateAction<number>
-  ) => {
+  // Set selected tab based on URL query parameter
+  useEffect(() => {
+    // const tab = new URLSearchParams(window.location.search).get('tab');
+    const tab = searchParams.get('tab');
+    if (tab === 'profile') {
+      setSelectedTab(0);
+    } else if (tab === 'campaign') {
+      setSelectedTab(1);
+    }
+  }, [searchParams]);
+
+  // Handle tab change and update URL
+  const handleTabChange = (event: any, newValue: number) => {
     setSelectedTab(newValue);
+    const newTab = newValue === 0 ? 'profile' : 'campaign';
+    router.push(`?tab=${newTab}`, undefined);
   };
 
   if (!user) {
@@ -30,13 +43,12 @@ export default function Dashboard() {
 
   return (
     <NavigationLayout>
-      {/* Tabs for navigation */}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
         <Tabs
           value={selectedTab}
           onChange={handleTabChange}
           aria-label="dashboard tabs"
-          centered // Centers the tabs
+          centered
         >
           <Tab label="Profile" />
           <Tab label="Campaigns" />

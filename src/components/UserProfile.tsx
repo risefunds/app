@@ -52,14 +52,12 @@ const UserProfile = () => {
       }
 
       setLoading(false);
-      console.log({ appContext });
     };
     if (appContext.helper.platformUser) getCreativeUser();
   }, [appContext.helper.platformUser]);
 
   // Function to get values for the form
   const getValues = () => {
-    console.log(creativeUser);
     if (creativeUser) return creativeUser?.details;
   };
 

@@ -1,7 +1,8 @@
 'use client';
 
-import { Box, Typography, List, ListItem, Link, Grid } from '@mui/material';
-import React, { useContext } from 'react';
+import { Box, Typography, List, ListItem, Link } from '@mui/material';
+import Grid from '@mui/material/Grid2';
+import React, { useContext, useEffect } from 'react';
 import { AppContext } from 'context/AppContext';
 import { AuthLayout } from 'layouts/AuthLayout';
 import NextLink from 'next/link';
@@ -13,6 +14,13 @@ import { FormBuilderJSON } from 'components/FormBuilder';
 const LoginPage: React.FC = () => {
   const appContext = useContext(AppContext);
   const router = useRouter();
+
+  // Redirect to the homepage if the user is already logged in
+  useEffect(() => {
+    if (appContext.helper.firebaseUser) {
+      router.push('/');
+    }
+  }, [appContext.helper.firebaseUser, router]);
 
   return (
     <>
@@ -72,7 +80,7 @@ const LoginPage: React.FC = () => {
                   values.password
                 );
                 appContext.helper.showSuccess('Login Success');
-                router.push('/user/dashboard');
+                router.push('/');
               } catch (error: any) {
                 console.log(error);
                 appContext.helper.showError(error);
@@ -83,7 +91,7 @@ const LoginPage: React.FC = () => {
         <List>
           <ListItem>
             <Grid container justifyContent={'space-between'}>
-              <Grid item xs={8} sx={{ display: 'flex' }}>
+              <Grid size={{ xs: 8 }} sx={{ display: 'flex' }}>
                 <Typography variant="body2">Don't have membership?</Typography>
                 <Typography
                   sx={{
@@ -98,7 +106,7 @@ const LoginPage: React.FC = () => {
                   </NextLink>
                 </Typography>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Box>
                   <Typography
                     sx={{ pl: 0.5, textDecoration: 'underline' }}

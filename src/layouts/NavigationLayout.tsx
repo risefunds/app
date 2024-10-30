@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Layout } from './Layout';
 import { useRouter } from 'next/navigation';
+import { useAuth } from 'hooks/useAuth';
 import Link from 'next/link';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -18,7 +19,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Stack from '@mui/material/Stack';
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Campaign', 'Logout'];
 
 export interface INavigationLayoutProps {
   noUserSettings?: boolean;
@@ -42,6 +43,8 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+
+  const { user, appContext } = useAuth();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -171,7 +174,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                 ))}
               </Box>
               <Box sx={{ flexGrow: 0 }}>
-                {true ? (
+                {!user ? (
                   <Stack spacing={2} direction="row">
                     <Button
                       variant="outlined"
@@ -183,19 +186,18 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                     <Button
                       variant="contained"
                       sx={buttonStyles}
-                      onClick={() => router.push('/user/dashboard')}
+                      onClick={() => router.push('/auth/signup')}
                     >
-                      Start a Campaign
+                      Sign Up
                     </Button>
                   </Stack>
                 ) : (
-                  <>
+                  <Stack spacing={2} direction="row">
                     <Tooltip title="Open settings">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar
-                          alt="Remy Sharp"
-                          src="/static/images/avatar/2.jpg"
-                        />
+                        <Avatar sx={{ bgcolor: 'primary.main' }}>
+                          {user.email[0].toUpperCase()}
+                        </Avatar>
                       </IconButton>
                     </Tooltip>
                     <Menu
@@ -215,14 +217,38 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                       onClose={handleCloseUserMenu}
                     >
                       {settings.map((setting) => (
-                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                        <MenuItem
+                          key={setting}
+                          onClick={async () => {
+                            if (setting === 'Logout') {
+                              await appContext.helper.signOut(); // Call signOut function
+                              router.push('/'); // Redirect to home page after logout
+                            } else {
+                              // Navigate to the dashboard with a specific tab (profile or campaign)
+                              router.push(
+                                `/user/dashboard?tab=${setting.toLowerCase()}`,
+                                undefined
+                              );
+                            }
+                            handleCloseUserMenu(); // Close the user menu after selection
+                          }}
+                        >
                           <Typography sx={{ textAlign: 'center' }}>
                             {setting}
                           </Typography>
                         </MenuItem>
                       ))}
                     </Menu>
-                  </>
+                    <Button
+                      variant="contained"
+                      sx={buttonStyles}
+                      onClick={() =>
+                        router.push('/user/dashboard?tab=campaign')
+                      }
+                    >
+                      Start a Campaign
+                    </Button>
+                  </Stack>
                 )}
               </Box>
             </Toolbar>

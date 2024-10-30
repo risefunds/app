@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter } from 'next/navigation';
 import { AppContextProvider } from 'context/AppContext';
 import { DBServiceClient } from 'utils/DBServiceClient';
@@ -28,7 +29,7 @@ export const AppConsumerComponent: React.FC<{
         setAuthUser(user);
       } else {
         setAuthUser(null);
-        router.push('/auth/login');
+        // router.push('/');
       }
       setLoading(false);
     });
@@ -42,7 +43,7 @@ export const AppConsumerComponent: React.FC<{
 
   // Render a loading state while the Firebase auth state is being determined
   if (loading) {
-    return <div>Loading...</div>;
+    return <CircularProgress color="primary" sx={{ margin: '1rem' }} />;
   }
 
   return (
