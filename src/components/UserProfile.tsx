@@ -52,14 +52,12 @@ const UserProfile = () => {
       }
 
       setLoading(false);
-      console.log({ appContext });
     };
     if (appContext.helper.platformUser) getCreativeUser();
   }, [appContext.helper.platformUser]);
 
   // Function to get values for the form
   const getValues = () => {
-    console.log(creativeUser);
     if (creativeUser) return creativeUser?.details;
   };
 
@@ -98,7 +96,10 @@ const UserProfile = () => {
               await appContext.sdkServices?.core.CreativeUserEntityService.persist(
                 creativeUser
               );
-            } catch (error) {}
+              appContext.helper.showSuccess('Success');
+            } catch (error) {
+              appContext.helper.showError('Profile update failed');
+            }
           },
         }}
         schema={formSchemas.CreativeProfile.getSchema()}

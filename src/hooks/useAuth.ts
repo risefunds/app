@@ -17,7 +17,7 @@ export const useAuth = () => {
       if (user) {
         setUser({ email: user.email! });
       } else {
-        router.push('/auth/login');
+        router.push('/');
       }
     });
 

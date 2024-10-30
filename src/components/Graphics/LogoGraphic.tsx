@@ -1,4 +1,5 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import Link from 'next/link';
 import React from 'react';
 
@@ -9,7 +10,7 @@ export const LogoGraphic: React.FC<ILogoGraphicProps> = ({ displayName }) => {
   return (
     <Link href="/" passHref>
       <Grid container alignItems="flex-end" sx={{ cursor: 'pointer' }}>
-        <Grid item>
+        <Grid>
           <Typography
             variant={'h4'}
             sx={{
@@ -21,7 +22,7 @@ export const LogoGraphic: React.FC<ILogoGraphicProps> = ({ displayName }) => {
             N<span style={{ color: '#01f900' }}>3</span>
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <Typography
             variant={'h4'}
             sx={{ fontWeight: 'light', lineHeight: '.8em' }}
@@ -30,7 +31,7 @@ export const LogoGraphic: React.FC<ILogoGraphicProps> = ({ displayName }) => {
           </Typography>
         </Grid>
         {displayName && (
-          <Grid item>
+          <Grid>
             <Box sx={{ ml: 1 }}>
               <Typography
                 variant="body2"
