@@ -24,7 +24,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <>
-      <AuthLayout pageTitle="Creative Connect">
+      <AuthLayout pageTitle="Login">
         <FormBuilderJSON
           schema={{
             version: 1,

@@ -8,7 +8,7 @@ interface ILogoGraphicProps {
 }
 export const LogoGraphic: React.FC<ILogoGraphicProps> = ({ displayName }) => {
   return (
-    <Link href="/" passHref>
+    <Link href="/" passHref style={{ textDecoration: 'none' }}>
       <Grid container alignItems="flex-end" sx={{ cursor: 'pointer' }}>
         <Grid>
           <Typography
@@ -17,17 +17,22 @@ export const LogoGraphic: React.FC<ILogoGraphicProps> = ({ displayName }) => {
               fontWeight: 'bolder',
               textTransform: 'uppercase',
               lineHeight: '.8em',
+              color: 'primary.main',
             }}
           >
-            N<span style={{ color: '#01f900' }}>3</span>
+            RIS<span style={{ color: '' }}>E</span>
           </Typography>
         </Grid>
         <Grid>
           <Typography
             variant={'h4'}
-            sx={{ fontWeight: 'light', lineHeight: '.8em' }}
+            sx={{
+              fontWeight: 'light',
+              lineHeight: '.8em',
+              color: 'secondary.contrastText',
+            }}
           >
-            plus
+            FUNDS
           </Typography>
         </Grid>
         {displayName && (

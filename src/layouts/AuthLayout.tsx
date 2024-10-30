@@ -30,24 +30,8 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
             <ListItem>
               <Typography sx={{ pb: 2 }} variant="subtitle1">
                 Welcome and thank you for expressing your interest in our
-                community. N3plus is launching its platform live!
+                community. RISEFUNDS is launching its platform live!
                 <br />
-                <br /> We are looking to showcase our first wave of 20 artists
-                and creative makers. If you wish to be part of this opening,
-                make sure you signup and share some of the works you are proud
-                of. We’ll advertise your creativity, for free, on our homepage
-                and on Instagram.
-                <br />
-                <br /> If you would like to know more about us, feel free to
-                reach out at{' '}
-                <Link href="mailto:team@newplus.com?subject=feature">
-                  team@n3plus.com
-                </Link>
-                .
-                <br />
-                <br />
-                We’ll proceed with a final selection and get back to you within
-                5 business days regarding the final choice.
               </Typography>
             </ListItem>
           </List>

@@ -10,9 +10,11 @@ export const LegalFooter: React.FC = () => {
             variant="caption"
             sx={{ lineHeight: 1.75, display: 'block' }}
           >
-            N3Plus' is based at the NEW INC, the world’s first museum-led
-            incubator for art, technology and design located in the heart of the
-            Lower East Side in Manhattan.
+            RiseFunds is a capstone initiative created by a team of three Web
+            Development students at Conestoga College. The platform, inspired by
+            leading crowdfunding sites like Indiegogo and Kickstarter, is
+            designed to empower creators by providing a user-friendly space to
+            launch and manage fundraising campaigns.
           </Typography>
         </Box>
       </Box>
