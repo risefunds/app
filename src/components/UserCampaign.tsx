@@ -47,7 +47,7 @@ const UserCampaign = () => {
           await appContext.sdkServices?.core.CreativeUserEntityService.whereViaParent(
             {
               parentObject: appContext.helper.platformUser,
-              params: [{ key: 'archive', value: false, operator: '==' }],
+              params: [{ key: 'archive', value: true, operator: '==' }],
             }
           );
 

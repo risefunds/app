@@ -53,8 +53,8 @@ const UserProfile = () => {
 
       setLoading(false);
     };
-    if (appContext.helper.platformUser) getCreativeUser();
-  }, [appContext.helper.platformUser]);
+    if (appContext.helper.platformUser && !creativeUser) getCreativeUser();
+  }, [appContext.helper.platformUser, creativeUser]);
 
   // Function to get values for the form
   const getValues = () => {
