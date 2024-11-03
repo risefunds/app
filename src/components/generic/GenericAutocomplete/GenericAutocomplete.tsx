@@ -77,7 +77,7 @@ export const GenericAutocomplete: React.FC<IGenericAutocomplete> = ({
 
           const { inputValue } = state;
           const isExisting = options.some(
-            (option) => inputValue === option.value
+            (option) => inputValue === option.value,
           );
           if (props.Config?.addMore)
             if (inputValue !== '' && !isExisting) {

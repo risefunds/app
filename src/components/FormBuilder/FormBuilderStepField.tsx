@@ -19,7 +19,7 @@ const FormBuilderStepField = (props: FormBuilderStepItemPropsType) => {
   const [skipped, setSkipped] = useState(
     props.field.skip
       ? props.field.skip(props.getValues(), undefined, props.readOnly)
-      : false
+      : false,
   );
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const FormBuilderStepField = (props: FormBuilderStepItemPropsType) => {
           props.field.onChange(
             props.getValues(),
             updatedValues,
-            props.setFieldValue
+            props.setFieldValue,
           );
       }}
       setFieldTouched={(idx?: number) => {

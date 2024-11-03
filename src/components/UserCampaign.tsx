@@ -44,12 +44,15 @@ const UserCampaign = () => {
         if (!appContext.helper.platformUser)
           throw new Error('Platform user not resolved.');
         let creativeUsers =
-          await appContext.sdkServices?.core.CreativeUserEntityService.where(
-            {
-              params: [ { key: 'parentReference.PlatformUser', value: appContext.helper.platformUser.id, operator: '==' }],
-            }
-          );
-
+          await appContext.sdkServices?.core.CreativeUserEntityService.where({
+            params: [
+              {
+                key: 'parentReference.PlatformUser',
+                value: appContext.helper.platformUser.id,
+                operator: '==',
+              },
+            ],
+          });
 
         let creativeUser = creativeUsers?.[0];
         setCreativeUser(creativeUser);
@@ -59,13 +62,13 @@ const UserCampaign = () => {
             await appContext.sdkServices?.core.CampaignEntityService.where({
               params: [
                 {
-                  key: 'parentReference.CreativeUser',
-                  value: creativeUser.id,
+                  key: 'archive',
+                  value: false,
                   operator: '==',
                 },
                 {
-                  key: 'archive',
-                  value: false,
+                  key: 'parentReference.CreativeUser',
+                  value: creativeUser.id,
                   operator: '==',
                 },
               ],
@@ -109,7 +112,7 @@ const UserCampaign = () => {
             [appContext.helper.platformUser.collection]:
               appContext.helper.platformUser.id,
             [creativeUser.collection]: creativeUser.id,
-          })
+          }),
         );
 
       setSelectedCampaign(campaignCol);
@@ -145,20 +148,20 @@ const UserCampaign = () => {
         selectedCampaign.campaignCard = values.campaignCard;
 
         await appContext.sdkServices?.core.CampaignEntityService.persist(
-          selectedCampaign
+          selectedCampaign,
         );
       }
       const listedCampaigns =
         await appContext.sdkServices?.core.CampaignEntityService.where({
           params: [
             {
-              key: 'parentReference.CreativeUser',
-              value: creativeUser.id,
+              key: 'archive',
+              value: false,
               operator: '==',
             },
             {
-              key: 'archive',
-              value: false,
+              key: 'parentReference.CreativeUser',
+              value: creativeUser.id,
               operator: '==',
             },
           ],

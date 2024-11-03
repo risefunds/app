@@ -77,7 +77,7 @@ const LoginPage: React.FC = () => {
                 await signInWithEmailAndPassword(
                   auth,
                   values.email,
-                  values.password
+                  values.password,
                 );
                 appContext.helper.showSuccess('Login Success');
                 router.push('/');

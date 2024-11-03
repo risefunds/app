@@ -27,12 +27,15 @@ const UserProfile = () => {
         if (!appContext.helper.platformUser)
           throw new Error('Platform user not resolved.');
         let creativeUsers =
-          await appContext.sdkServices?.core.CreativeUserEntityService.where(
-            {
-              params: [ { key: 'parentReference.PlatformUser', value: appContext.helper.platformUser.id, operator: '==' }],
-            }
-          );
-
+          await appContext.sdkServices?.core.CreativeUserEntityService.where({
+            params: [
+              {
+                key: 'parentReference.PlatformUser',
+                value: appContext.helper.platformUser.id,
+                operator: '==',
+              },
+            ],
+          });
 
         let creativeUser = creativeUsers?.[0];
         if (!creativeUser) {
@@ -41,7 +44,7 @@ const UserProfile = () => {
               new models.CreativeUserEntityModel({
                 [appContext.helper.platformUser.collection]:
                   appContext.helper.platformUser.id,
-              })
+              }),
             );
         }
 
@@ -94,7 +97,7 @@ const UserProfile = () => {
               if (!creativeUser) throw new Error('Creative user not resolved');
               creativeUser.details = { ...creativeUser.details, ...values };
               await appContext.sdkServices?.core.CreativeUserEntityService.persist(
-                creativeUser
+                creativeUser,
               );
               appContext.helper.showSuccess('Success');
             } catch (error) {

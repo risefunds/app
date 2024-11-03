@@ -8,7 +8,7 @@ export interface IAppContextHelper {
     message: string,
     variant?: VariantType,
     duration?: number,
-    moreOptions?: OptionsObject
+    moreOptions?: OptionsObject,
   ): void;
   showError(error: unknown, persist?: boolean): void;
   showSuccess(message: string): void;
@@ -51,7 +51,7 @@ export const defaultHelper: IAppContextHelper = {
 // Local storage reducer for the local storage management
 export const LocalStoreReducer = (
   local: Array<{ key: string; value: string }>,
-  action: { type: 'SET' | 'DELETE'; data: { key: string; value?: any } }
+  action: { type: 'SET' | 'DELETE'; data: { key: string; value?: any } },
 ) => {
   switch (action.type) {
     case 'SET': {

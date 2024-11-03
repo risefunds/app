@@ -37,12 +37,12 @@ const SignupPage: React.FC = () => {
                 }>(
                   '/pub/addon/entity/PlatformUser/getPlatformUser',
                   { user: values, type: ['creative'] },
-                  false
+                  false,
                 );
               if (!signupResponse)
                 throw new Error('Signup failed. Please try again.');
               await appContext.helper.signInWithCustomToken(
-                signupResponse.customToken
+                signupResponse.customToken,
               );
               appContext.helper.showSuccess('Sign up Success');
               router.push('/');

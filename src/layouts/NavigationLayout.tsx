@@ -39,10 +39,10 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
   ...props
 }) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
+    null,
   );
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
+    null,
   );
 
   const { user, appContext } = useAuth();
@@ -65,6 +65,12 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
   const router = useRouter();
   // const isMobile = appContext.helper.isMobile
   const [mobileMenu, setMobileMenu] = useState(false);
+
+  useEffect(() => {
+    if (appContext.helper.isSU && !settings.includes('SU')) {
+      settings.splice(2, 0, 'SU');
+    }
+  }, [appContext.helper.isSU]);
 
   return (
     <>
@@ -208,11 +214,13 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                             if (setting === 'Logout') {
                               await appContext.helper.signOut(); // Call signOut function
                               router.push('/'); // Redirect to home page after logout
+                            } else if (setting === 'SU') {
+                              router.push('/user/su/creative');
                             } else {
                               // Navigate to the dashboard with a specific tab (profile or campaign)
                               router.push(
                                 `/user/${setting.toLowerCase()}`,
-                                undefined
+                                undefined,
                               );
                             }
                             handleCloseUserMenu(); // Close the user menu after selection
@@ -227,9 +235,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                     <Button
                       variant="contained"
                       sx={buttonStyles}
-                      onClick={() =>
-                        router.push('/user/campaign')
-                      }
+                      onClick={() => router.push('/user/campaign')}
                     >
                       Start a Campaign
                     </Button>

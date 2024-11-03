@@ -29,7 +29,7 @@ export interface IAppContextHelper {
     message: string,
     variant?: VariantType,
     duration?: number,
-    moreOptions?: OptionsObject
+    moreOptions?: OptionsObject,
   ): void;
   showError(error: unknown, persist?: boolean): void;
   showSuccess(message: string): void;
@@ -64,7 +64,7 @@ const defaultHelper: IAppContextHelper = {
   height: 0,
   width: 0,
   setPlatformUser: function (
-    platformUser: models.PlatformUserEntityModel
+    platformUser: models.PlatformUserEntityModel,
   ): void {
     throw new Error('Function not implemented.');
   },
@@ -111,7 +111,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
   >();
   const [authUserLoading, setAuthUserLoading] = useState(true);
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | undefined>(
-    undefined
+    undefined,
   );
   const { height, width } = getWindowDimensions();
   const { enqueueSnackbar } = useSnackbar();
@@ -124,7 +124,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
       : [];
   const [localStore, dispatch] = useReducer(
     LocalStoreReducer,
-    initialLocalStore
+    initialLocalStore,
   );
 
   const sdkServices = useMemo(() => getSDKServices(), []);
@@ -166,7 +166,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
               } finally {
                 setAuthUserLoading(false);
               }
-            }
+            },
           );
       } else {
         setFirebaseUser(undefined);
@@ -223,14 +223,14 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
         dispatch({ type: 'SET', data: { key, value } });
         window.localStorage.setItem(
           'appLocalStore',
-          JSON.stringify(localStore)
+          JSON.stringify(localStore),
         );
       },
       deleteLocalStoreValue: (key: string) => {
         dispatch({ type: 'DELETE', data: { key } });
         window.localStorage.setItem(
           'appLocalStore',
-          JSON.stringify(localStore)
+          JSON.stringify(localStore),
         );
       },
       getLocalStoreValue: (key: string) => {

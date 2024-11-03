@@ -57,7 +57,7 @@ export default function Dashboard() {
 
       {/* Conditional rendering based on selected tab */}
       {selectedTab === 0 && (
-        <ProfileLayout pageTitle="User Profile">
+        <ProfileLayout>
           <UserProfile />
         </ProfileLayout>
       )}

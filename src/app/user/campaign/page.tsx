@@ -48,15 +48,20 @@ const UserCampaign = () => {
         if (!appContext.helper.platformUser)
           throw new Error('Platform user not resolved.');
         let creativeUsers =
-          await appContext.sdkServices?.core.CreativeUserEntityService.where(
-            {
-              params: [ { key: 'parentReference.PlatformUser', value: appContext.helper.platformUser.id, operator: '==' }],
-            }
-          );
-
+          await appContext.sdkServices?.core.CreativeUserEntityService.where({
+            params: [
+              {
+                key: 'parentReference.PlatformUser',
+                value: appContext.helper.platformUser.id,
+                operator: '==',
+              },
+            ],
+          });
 
         let creativeUser = creativeUsers?.[0];
-        console.log({creativeUser: creativeUser?.parentReference.PlatformUser});
+        console.log({
+          creativeUser: creativeUser?.parentReference.PlatformUser,
+        });
         setCreativeUser(creativeUser);
 
         if (creativeUser) {
@@ -69,17 +74,14 @@ const UserCampaign = () => {
                   operator: '==',
                 },
                 {
-                    key: 'parentReference.CreativeUser',
-                    value: creativeUser.id
-  ,
-                    operator: '==',
+                  key: 'parentReference.CreativeUser',
+                  value: creativeUser.id,
+                  operator: '==',
                 },
-
               ],
             });
 
-            console.log({creativeUser: creativeUserCampaigns});
-            
+          console.log({ creativeUser: creativeUserCampaigns });
 
           if (creativeUserCampaigns) {
             setCampaigns(creativeUserCampaigns);
@@ -119,7 +121,7 @@ const UserCampaign = () => {
             [appContext.helper.platformUser.collection]:
               appContext.helper.platformUser.id,
             [creativeUser.collection]: creativeUser.id,
-          })
+          }),
         );
 
       setSelectedCampaign(campaignCol);
@@ -155,7 +157,7 @@ const UserCampaign = () => {
         selectedCampaign.campaignCard = values.campaignCard;
 
         await appContext.sdkServices?.core.CampaignEntityService.persist(
-          selectedCampaign
+          selectedCampaign,
         );
       }
       const listedCampaigns =
@@ -167,10 +169,9 @@ const UserCampaign = () => {
               operator: '==',
             },
             {
-                key: 'parentReference.CreativeUser',
-                value: creativeUser.id
-,
-                operator: '==',
+              key: 'parentReference.CreativeUser',
+              value: creativeUser.id,
+              operator: '==',
             },
           ],
         });
@@ -189,77 +190,80 @@ const UserCampaign = () => {
 
   return (
     <NavigationLayout>
-        <Container maxWidth="lg">
-      <Grid container spacing={3}>
-        {/* Left Navigation Panel */}
-        <Grid size={{ xs: 12, sm: 3 }}>
-          {isMobile ? (
-            <Tabs
-              value={
-                showForm ? 'form' : selectedCampaign ? selectedCampaign : 'new'
-              }
-              onChange={(event, value) => {
-                if (value === 'new') handleAddCampaign();
-                else {
-                  const campaign = campaigns.find((c) => c.id === value);
-                  handleSelectCampaign(campaign!);
+      <Container maxWidth="lg">
+        <Grid container spacing={3}>
+          {/* Left Navigation Panel */}
+          <Grid size={{ xs: 12, sm: 3 }}>
+            {isMobile ? (
+              <Tabs
+                value={
+                  showForm
+                    ? 'form'
+                    : selectedCampaign
+                      ? selectedCampaign
+                      : 'new'
                 }
-              }}
-              variant="scrollable"
-              scrollButtons="auto"
-              aria-label="Campaign Tabs"
-            >
-              <Tab label="Add New Campaign" value="new" />
-              {campaigns.map((campaign) => (
-                <Tab
-                  label={campaign.campaignTitle || 'Untitled'}
-                  value={campaign.id}
-                  key={campaign.id}
-                />
-              ))}
-            </Tabs>
-          ) : (
-            <List component="nav">
-              <ListItemButton onClick={handleAddCampaign}>
-                <ListItemText primary="+ Add New Campaign" />
-              </ListItemButton>
-              {campaigns.map((campaign) => (
-                <ListItemButton
-                  key={campaign.id}
-                  onClick={() => handleSelectCampaign(campaign)}
-                >
-                  <ListItemText
-                    primary={campaign.campaignTitle || 'Untitled'}
-                  />
-                </ListItemButton>
-              ))}
-            </List>
-          )}
-          <Divider sx={{ my: 2 }} />
-        </Grid>
-
-        {/* Main Content Panel */}
-        <Grid size={{ xs: 12, sm: 9 }}>
-          <Box>
-            {showForm ? (
-              <FormBuilderJSON
-                FormBuilderProps={{
-                  initialValues: selectedCampaign ? selectedCampaign : {},
-                  onSubmit: async (values: any) => {
-                    await handleSaveCampaign(values);
-                  },
+                onChange={(event, value) => {
+                  if (value === 'new') handleAddCampaign();
+                  else {
+                    const campaign = campaigns.find((c) => c.id === value);
+                    handleSelectCampaign(campaign!);
+                  }
                 }}
-                schema={formSchemas.CampaignBasics.getSchema()}
-              />
+                variant="scrollable"
+                scrollButtons="auto"
+                aria-label="Campaign Tabs"
+              >
+                <Tab label="Add New Campaign" value="new" />
+                {campaigns.map((campaign) => (
+                  <Tab
+                    label={campaign.campaignTitle || 'Untitled'}
+                    value={campaign.id}
+                    key={campaign.id}
+                  />
+                ))}
+              </Tabs>
             ) : (
-              <></>
+              <List component="nav">
+                <ListItemButton onClick={handleAddCampaign}>
+                  <ListItemText primary="+ Add New Campaign" />
+                </ListItemButton>
+                {campaigns.map((campaign) => (
+                  <ListItemButton
+                    key={campaign.id}
+                    onClick={() => handleSelectCampaign(campaign)}
+                  >
+                    <ListItemText
+                      primary={campaign.campaignTitle || 'Untitled'}
+                    />
+                  </ListItemButton>
+                ))}
+              </List>
             )}
-          </Box>
+            <Divider sx={{ my: 2 }} />
+          </Grid>
+
+          {/* Main Content Panel */}
+          <Grid size={{ xs: 12, sm: 9 }}>
+            <Box>
+              {showForm ? (
+                <FormBuilderJSON
+                  FormBuilderProps={{
+                    initialValues: selectedCampaign ? selectedCampaign : {},
+                    onSubmit: async (values: any) => {
+                      await handleSaveCampaign(values);
+                    },
+                  }}
+                  schema={formSchemas.CampaignBasics.getSchema()}
+                />
+              ) : (
+                <></>
+              )}
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
     </NavigationLayout>
-    
   );
 };
 

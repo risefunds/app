@@ -35,7 +35,7 @@ import { v4 } from 'uuid';
 import { models } from '@risefunds/sdk';
 
 function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number }
+  props: LinearProgressProps & { value: number },
 ) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -44,7 +44,7 @@ function LinearProgressWithLabel(
       </Box>
       <Box sx={{ minWidth: 35 }}>
         <Typography variant="body2" color="text.secondary">{`${Math.round(
-          props.value
+          props.value,
         )}%`}</Typography>
       </Box>
     </Box>
@@ -149,7 +149,7 @@ export const GenericSingleImageUpload: React.FC<
                 `${
                   process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
                   'risefunds.appspot.com'
-                }/${fileId}`
+                }/${fileId}`,
               );
 
               // Track upload progress using uploadBytesResumable
@@ -182,7 +182,7 @@ export const GenericSingleImageUpload: React.FC<
 
                   onChange({ ...(props.value || {}), ...uploadedImageTemp });
                   setLoading(false); // Stop loading state
-                }
+                },
               );
             }
           };

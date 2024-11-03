@@ -10,14 +10,10 @@ import { LogoGraphic } from 'components/Graphics/LogoGraphic';
 import { LegalFooter } from 'components/AuthLayout/LegalFooter';
 
 interface ProfileLayoutProps {
-  pageTitle: string;
   children: React.ReactNode;
 }
 
-export const ProfileLayout: React.FC<ProfileLayoutProps> = ({
-  pageTitle,
-  children,
-}) => {
+export const ProfileLayout: React.FC<ProfileLayoutProps> = ({ children }) => {
   return (
     <Box
       sx={{
