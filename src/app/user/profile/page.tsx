@@ -25,17 +25,17 @@ const UserProfile = () => {
     const getCreativeUser = async () => {
       try {
         setLoading(true);
-        if (!appContext.helper.platformUser)
+        if (!appContext.helper.platformUser)          
           throw new Error('Platform user not resolved.');
         let creativeUsers =
-          await appContext.sdkServices?.core.CreativeUserEntityService.whereViaParent(
+          await appContext.sdkServices?.core.CreativeUserEntityService.where(
             {
-              parentObject: appContext.helper.platformUser,
-              params: [{ key: 'archive', value: false, operator: '==' }],
+              params: [ { key: 'parentReference.PlatformUser', value: appContext.helper.platformUser.id, operator: '==' }],
             }
           );
 
         let creativeUser = creativeUsers?.[0];
+        console.log({platformUser: appContext.helper.platformUser, creativeUser});
         if (!creativeUser) {
           creativeUser =
             await appContext.sdkServices?.core.CreativeUserEntityService.persist(
@@ -100,7 +100,10 @@ const UserProfile = () => {
                 await appContext.sdkServices?.core.CreativeUserEntityService.persist(
                   creativeUser
                 );
-              } catch (error) {}
+                appContext.helper.showSuccess('Success');
+              } catch (error) {
+                appContext.helper.showError('Profile update failed');
+              }
             },
           }}
           schema={formSchemas.CreativeProfile.getSchema()}
