@@ -44,12 +44,12 @@ const UserCampaign = () => {
         if (!appContext.helper.platformUser)
           throw new Error('Platform user not resolved.');
         let creativeUsers =
-          await appContext.sdkServices?.core.CreativeUserEntityService.whereViaParent(
+          await appContext.sdkServices?.core.CreativeUserEntityService.where(
             {
-              parentObject: appContext.helper.platformUser,
-              params: [{ key: 'archive', value: true, operator: '==' }],
+              params: [ { key: 'parentReference.PlatformUser', value: appContext.helper.platformUser.id, operator: '==' }],
             }
           );
+
 
         let creativeUser = creativeUsers?.[0];
         setCreativeUser(creativeUser);

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AppContext } from 'context/AppContext';
 import { useAuth } from 'hooks/useAuth';
+import { NavigationLayout } from 'layouts/NavigationLayout';
 import { formSchemas, models } from '@risefunds/sdk';
 import { ProfileLayout } from 'layouts/ProfileLayout';
 import { useRouter } from 'next/navigation';
@@ -24,7 +25,7 @@ const UserProfile = () => {
     const getCreativeUser = async () => {
       try {
         setLoading(true);
-        if (!appContext.helper.platformUser)
+        if (!appContext.helper.platformUser)          
           throw new Error('Platform user not resolved.');
         let creativeUsers =
           await appContext.sdkServices?.core.CreativeUserEntityService.where(
@@ -33,8 +34,8 @@ const UserProfile = () => {
             }
           );
 
-
         let creativeUser = creativeUsers?.[0];
+        console.log({platformUser: appContext.helper.platformUser, creativeUser});
         if (!creativeUser) {
           creativeUser =
             await appContext.sdkServices?.core.CreativeUserEntityService.persist(
@@ -53,11 +54,12 @@ const UserProfile = () => {
 
       setLoading(false);
     };
-    if (appContext.helper.platformUser && !creativeUser) getCreativeUser();
-  }, [appContext.helper.platformUser, creativeUser]);
+    if (appContext.helper.platformUser) getCreativeUser();
+  }, [appContext.helper.platformUser]);
 
   // Function to get values for the form
   const getValues = () => {
+    console.log(creativeUser);
     if (creativeUser) return creativeUser?.details;
   };
 
@@ -70,41 +72,44 @@ const UserProfile = () => {
   }
 
   return (
-    <ProfileLayout pageTitle="Register">
-      <Typography
-        component="h2"
-        sx={{
-          mr: 2,
-          fontSize: '2rem',
-          fontWeight: 500,
-          lineHeight: 1,
-          letterSpacing: '.08rem',
-          color: 'secondary.contrastText',
-          textDecoration: 'none',
-        }}
-      >
-        Welcome {user.email}
-      </Typography>
+    <NavigationLayout>
+      <ProfileLayout pageTitle="Register">
+        <Typography
+          component="h2"
+          sx={{
+            mr: 2,
+            fontSize: '2rem',
+            fontWeight: 500,
+            lineHeight: 1,
+            letterSpacing: '.08rem',
+            color: 'secondary.contrastText',
+            textDecoration: 'none',
+          }}
+        >
+          Welcome {user.email}
+        </Typography>
 
-      <FormBuilderJSON
-        FormBuilderProps={{
-          initialValues: { ...getValues() },
-          onSubmit: async (values) => {
-            try {
-              if (!creativeUser) throw new Error('Creative user not resolved');
-              creativeUser.details = { ...creativeUser.details, ...values };
-              await appContext.sdkServices?.core.CreativeUserEntityService.persist(
-                creativeUser
-              );
-              appContext.helper.showSuccess('Success');
-            } catch (error) {
-              appContext.helper.showError('Profile update failed');
-            }
-          },
-        }}
-        schema={formSchemas.CreativeProfile.getSchema()}
-      />
-    </ProfileLayout>
+        <FormBuilderJSON
+          FormBuilderProps={{
+            initialValues: { ...getValues() },
+            onSubmit: async (values) => {
+              try {
+                if (!creativeUser)
+                  throw new Error('Creative user not resolved');
+                creativeUser.details = { ...creativeUser.details, ...values };
+                await appContext.sdkServices?.core.CreativeUserEntityService.persist(
+                  creativeUser
+                );
+                appContext.helper.showSuccess('Success');
+              } catch (error) {
+                appContext.helper.showError('Profile update failed');
+              }
+            },
+          }}
+          schema={formSchemas.CreativeProfile.getSchema()}
+        />
+      </ProfileLayout>
+    </NavigationLayout>
   );
 };
 
