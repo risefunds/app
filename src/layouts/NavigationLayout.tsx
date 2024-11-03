@@ -211,7 +211,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                             } else {
                               // Navigate to the dashboard with a specific tab (profile or campaign)
                               router.push(
-                                `/user/dashboard?tab=${setting.toLowerCase()}`,
+                                `/user/${setting.toLowerCase()}`,
                                 undefined
                               );
                             }
@@ -228,7 +228,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                       variant="contained"
                       sx={buttonStyles}
                       onClick={() =>
-                        router.push('/user/dashboard?tab=campaign')
+                        router.push('/user/campaign')
                       }
                     >
                       Start a Campaign

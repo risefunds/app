@@ -35,7 +35,7 @@ const UserProfile = () => {
           );
 
         let creativeUser = creativeUsers?.[0];
-        console.log({platformUser: appContext.helper.platformUser, creativeUser});
+        
         if (!creativeUser) {
           creativeUser =
             await appContext.sdkServices?.core.CreativeUserEntityService.persist(
