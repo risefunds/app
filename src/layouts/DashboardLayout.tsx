@@ -5,15 +5,15 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
-interface ISULayoutProps {
+interface IDashboardLayoutProps {
   selected: string;
 }
 
-const SULayout: React.FC<ISULayoutProps> = ({ selected }) => {
+const DashboardLayout: React.FC<IDashboardLayoutProps> = ({ selected }) => {
   const router = useRouter();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    router.push(`/user/su/${newValue}`);
+    router.push(`/user/dashboard/${newValue}`);
   };
 
   return (
@@ -24,11 +24,11 @@ const SULayout: React.FC<ISULayoutProps> = ({ selected }) => {
         aria-label="dashboard tabs"
         centered
       >
-        <Tab label="Creatives" value="creative" />
-        <Tab label="Campaigns" value="campaign" />
+        <Tab label="Profile" value="profile" />
+        <Tab label="Documents" value="document" />
       </Tabs>
     </Box>
   );
 };
 
-export default SULayout;
+export default DashboardLayout;

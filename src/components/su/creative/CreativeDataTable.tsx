@@ -8,13 +8,11 @@ import {
   GridFilterModel,
   GridToolbar,
 } from '@mui/x-data-grid';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { RenderCarouselAction } from './RenderCarouselAction';
 import { CreativeActionDropdown } from './CreativeActionDropdown';
-import { AppContext } from 'context/AppContext';
 import { models } from '@risefunds/sdk';
-import { Close, Link, Mail } from '@mui/icons-material';
-import { useRouter, useSearchParams, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 interface ICreativeDataTableProps {
   creatives: models.CreativeUserEntityModel[];
@@ -22,28 +20,6 @@ interface ICreativeDataTableProps {
 }
 
 export const CreativeDataTable: React.FC<ICreativeDataTableProps> = (props) => {
-  const router = useRouter();
-  const appContext = useContext(AppContext);
-  const searchParams = useSearchParams();
-
-  // const [filterModel, setFilterModel] = useState<GridFilterModel>({
-  //   items: [],
-  // });
-
-  // useEffect(() => {
-  //   if (creativeId) {
-  //     setFilterModel({
-  //       items: [
-  //         {
-  //           field: 'id',
-  //           operator: 'contains',
-  //           value: creativeId,
-  //         },
-  //       ],
-  //     });
-  //   }
-  // }, [creativeId]);
-
   const [filterModel, setFilterModel] = useState<GridFilterModel>(
     useParams().creativeId?.[0]
       ? {

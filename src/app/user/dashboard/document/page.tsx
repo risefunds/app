@@ -9,13 +9,12 @@ import { ProfileLayout } from 'layouts/ProfileLayout';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import { FormBuilderJSON } from 'components/FormBuilder';
 import Typography from '@mui/material/Typography';
+import DashboardLayout from 'layouts/DashboardLayout';
 import CircularProgress from '@mui/material/CircularProgress';
 
-const UserProfile = () => {
+const UserDocument = () => {
   const { user } = useAuth();
   const appContext = useContext(AppContext);
   const searchParams = useSearchParams();
@@ -25,27 +24,6 @@ const UserProfile = () => {
     models.CreativeUserEntityModel | undefined
   >(undefined);
   const [loading, setLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState(0);
-
-  // Ref to track if `getCreativeUser` has already been executed
-  const isFetchingCreativeUser = useRef(false);
-
-  // Handle tab change and update URL without affecting creativeUser
-  const handleTabChange = (event: any, newValue: number) => {
-    setSelectedTab(newValue);
-    const newTab = newValue === 0 ? 'profile' : 'documents';
-    router.push(`?tab=${newTab}`, undefined);
-  };
-
-  // Manage tab state independently
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab === 'profile') {
-      setSelectedTab(0);
-    } else if (tab === 'campaign') {
-      setSelectedTab(1);
-    }
-  }, [searchParams]);
 
   // Isolate creativeUser fetching logic with `isFetchingCreativeUser` guard
   useEffect(() => {
@@ -68,7 +46,7 @@ const UserProfile = () => {
           });
 
         let creativeUser = creativeUsers?.[0];
-        // console.log({ details: creativeUser?.details });
+        console.log({ details: creativeUser?.details });
 
         if (!creativeUser) {
           // Create a new creativeUser only if it doesn't already exist
@@ -87,29 +65,15 @@ const UserProfile = () => {
         appContext.helper.showError(error);
       } finally {
         setLoading(false);
-        isFetchingCreativeUser.current = false; // Reset ref after completion
       }
     };
 
     // Only fetch/create creativeUser if platformUser exists and creativeUser hasn't been fetched/created yet
-    if (
-      appContext.helper.platformUser &&
-      !creativeUser &&
-      !isFetchingCreativeUser.current
-    ) {
-      isFetchingCreativeUser.current = true; // Set ref to prevent duplicate calls
+    if (appContext.helper.platformUser) {
       getCreativeUser();
     }
     setLoading(false);
-  }, [appContext.helper.platformUser, creativeUser]);
-
-  const getProfileValues = () => (creativeUser && creativeUser.details) || {};
-  const profileInitialValues = useMemo(
-    () => ({
-      ...getProfileValues(),
-    }),
-    [creativeUser],
-  );
+  }, [appContext.helper.platformUser]);
 
   const getDocumentValues = () => (creativeUser ? creativeUser.documents : {});
 
@@ -123,68 +87,11 @@ const UserProfile = () => {
 
   return (
     <NavigationLayout>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-        <Tabs
-          value={selectedTab}
-          onChange={handleTabChange}
-          aria-label="dashboard tabs"
-          centered
-        >
-          <Tab label="Profile" />
-          <Tab label="Documents" />
-        </Tabs>
-      </Box>
+      <DashboardLayout selected="document" />
 
-      {selectedTab === 0 && (
-        <ProfileLayout>
-          <Typography
-            component="h2"
-            sx={{
-              mr: 2,
-              fontSize: '2rem',
-              fontWeight: 500,
-              lineHeight: 1,
-              letterSpacing: '.08rem',
-              color: 'secondary.contrastText',
-              textDecoration: 'none',
-            }}
-          >
-            Welcome {user.email}
-          </Typography>
-          {creativeUser ? (
-            <FormBuilderJSON
-              FormBuilderProps={{
-                initialValues: { ...getProfileValues() },
-                onSubmit: async (values) => {
-                  try {
-                    if (!creativeUser)
-                      throw new Error('Creative user not resolved');
-                    creativeUser.details = {
-                      ...creativeUser.details,
-                      ...values,
-                    };
-                    creativeUser.portoflioPercentage =
-                      creativeUser.getPercentage();
-                    creativeUser.email = user.email;
-                    await appContext.sdkServices?.core.CreativeUserEntityService.persist(
-                      creativeUser,
-                    );
-                    appContext.helper.showSuccess('Success');
-                  } catch (error) {
-                    appContext.helper.showError('Profile update failed');
-                  }
-                },
-              }}
-              schema={formSchemas.CreativeProfile.getSchema()}
-            />
-          ) : (
-            <CircularProgress />
-          )}
-        </ProfileLayout>
-      )}
-      {selectedTab === 1 && (
-        <ProfileLayout>
-          {!creativeUser?.isVerified ? (
+      <ProfileLayout>
+        {creativeUser ? (
+          !creativeUser?.isVerified ? (
             <FormBuilderJSON
               FormBuilderProps={{
                 initialValues: { ...getDocumentValues() },
@@ -211,11 +118,13 @@ const UserProfile = () => {
             />
           ) : (
             <p>There are no additional documents to upload at this time</p>
-          )}
-        </ProfileLayout>
-      )}
+          )
+        ) : (
+          <CircularProgress />
+        )}
+      </ProfileLayout>
     </NavigationLayout>
   );
 };
 
-export default UserProfile;
+export default UserDocument;

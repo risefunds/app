@@ -10,5 +10,5 @@ export async function handleFeatureRevalidate() {
 
 export async function handleVerifyRevalidate() {
   console.log('Revalidating /user/profile');
-  revalidatePath('/user/profile');
+  revalidatePath('/user/dashboard/document');
 }

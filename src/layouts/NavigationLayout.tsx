@@ -219,7 +219,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                             } else {
                               // Navigate to the dashboard with a specific tab (profile or campaign)
                               router.push(
-                                `/user/${setting.toLowerCase()}`,
+                                `/user/dashboard/${setting.toLowerCase()}`,
                                 undefined,
                               );
                             }
