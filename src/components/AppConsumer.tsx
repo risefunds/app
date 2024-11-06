@@ -71,9 +71,9 @@ const ProtectedRoute: React.FC<{
   }, [authUserLoading, isProtectedRoute, isSU, router]);
 
   // Render loading state if authUserLoading is true
-  if (authUserLoading) {
-    return <CircularProgress color="primary" sx={{ margin: '1rem' }} />;
-  }
+  // if (authUserLoading) {
+  //   return <CircularProgress color="primary" sx={{ margin: '1rem' }} />;
+  // }
 
   // Render the component if user is authorized or route is not protected
   return <Component {...pageProps} />;

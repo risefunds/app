@@ -24,6 +24,7 @@
       "context/*": ["./src/context/*"],
       "utils/*": ["./src/utils/*"],
       "hooks/*": ["./src/hooks/*"],
+      "server/*": ["./src/server/*"],
       "@/*": ["./src/*"]
     },
     "target": "ES2017"

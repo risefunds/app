@@ -97,6 +97,7 @@ const UserProfile = () => {
       isFetchingCreativeUser.current = true; // Set ref to prevent duplicate calls
       getCreativeUser();
     }
+    setLoading(false);
   }, [appContext.helper.platformUser, creativeUser]);
 
   const getProfileValues = () => (creativeUser ? creativeUser.details : {});
@@ -143,7 +144,15 @@ const UserProfile = () => {
 
           <FormBuilderJSON
             FormBuilderProps={{
-              initialValues: { ...getProfileValues() },
+              initialValues: {
+                ...getProfileValues(),
+                firstName:
+                  appContext.helper.firebaseUser?.displayName?.split(' ')[0] ||
+                  '',
+                lastName:
+                  appContext.helper.firebaseUser?.displayName?.split(' ')[1] ||
+                  '',
+              },
               onSubmit: async (values) => {
                 try {
                   if (!creativeUser)
@@ -151,6 +160,7 @@ const UserProfile = () => {
                   creativeUser.details = { ...creativeUser.details, ...values };
                   creativeUser.portoflioPercentage =
                     creativeUser.getPercentage();
+                  creativeUser.email = user.email;
                   await appContext.sdkServices?.core.CreativeUserEntityService.persist(
                     creativeUser,
                   );
