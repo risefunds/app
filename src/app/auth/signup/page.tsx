@@ -24,8 +24,7 @@ const SignupPage: React.FC = () => {
       <FormBuilderJSON
         FormBuilderProps={{
           initialValues: {
-            firstName: '',
-            lastName: '',
+            displayName: '',
             email: '',
             password: '',
           },
@@ -37,12 +36,12 @@ const SignupPage: React.FC = () => {
                 }>(
                   '/pub/addon/entity/PlatformUser/getPlatformUser',
                   { user: values, type: ['creative'] },
-                  false
+                  false,
                 );
               if (!signupResponse)
                 throw new Error('Signup failed. Please try again.');
               await appContext.helper.signInWithCustomToken(
-                signupResponse.customToken
+                signupResponse.customToken,
               );
               appContext.helper.showSuccess('Sign up Success');
               router.push('/');
@@ -58,40 +57,27 @@ const SignupPage: React.FC = () => {
           steps: [
             {
               id: 'signupdetails',
-              fields: ['firstName', 'lastName', 'email', 'password'],
+              fields: ['displayName', 'email', 'password'],
               title: 'Signup',
               footerSubmitTitle: 'Register',
             },
           ],
           initialValues: {
-            firstName: '',
-            lastName: '',
+            displayName: '',
             email: '',
             password: '',
           },
           fields: [
             {
-              id: 'firstName',
+              id: 'displayName',
               type: 'text',
-              title: 'First name',
+              title: 'Full name',
               config: {
-                placeholder: 'John',
+                placeholder: 'John Doe',
               },
               validationSchema: [
                 ['yup.string'],
-                ['yup.required', 'First name is required'],
-              ],
-            },
-            {
-              id: 'lastName',
-              type: 'text',
-              title: 'Last name',
-              config: {
-                placeholder: 'Doe',
-              },
-              validationSchema: [
-                ['yup.string'],
-                ['yup.required', 'Last name is required'],
+                ['yup.required', 'Full name is required'],
               ],
             },
             {

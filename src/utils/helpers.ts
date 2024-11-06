@@ -24,7 +24,7 @@ export function getWindowDimensions() {
 // Local Store Reducer
 export const LocalStoreReducer = (
   local: Array<{ key: string; value: string }>,
-  action: { type: 'SET' | 'DELETE'; data: { key: string; value?: any } }
+  action: { type: 'SET' | 'DELETE'; data: { key: string; value?: any } },
 ) => {
   switch (action.type) {
     case 'SET': {
@@ -32,7 +32,7 @@ export const LocalStoreReducer = (
         ? local.map((u) =>
             u.key === action.data.key
               ? { ...u, value: action.data.value ?? null }
-              : u
+              : u,
           )
         : [
             ...local,

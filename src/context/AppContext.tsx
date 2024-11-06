@@ -17,6 +17,7 @@ import {
 import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from 'utils/firebaseConfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useRouter, usePathname } from 'next/navigation';
 import {
   useWidth,
   getWindowDimensions,
@@ -28,7 +29,7 @@ export interface IAppContextHelper {
     message: string,
     variant?: VariantType,
     duration?: number,
-    moreOptions?: OptionsObject
+    moreOptions?: OptionsObject,
   ): void;
   showError(error: unknown, persist?: boolean): void;
   showSuccess(message: string): void;
@@ -63,7 +64,7 @@ const defaultHelper: IAppContextHelper = {
   height: 0,
   width: 0,
   setPlatformUser: function (
-    platformUser: models.PlatformUserEntityModel
+    platformUser: models.PlatformUserEntityModel,
   ): void {
     throw new Error('Function not implemented.');
   },
@@ -110,25 +111,33 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
   >();
   const [authUserLoading, setAuthUserLoading] = useState(true);
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | undefined>(
-    undefined
+    undefined,
   );
   const { height, width } = getWindowDimensions();
   const { enqueueSnackbar } = useSnackbar();
   const responsiveWidth = useWidth();
+  const router = useRouter();
+  const pathname = usePathname();
   const initialLocalStore =
     typeof window !== 'undefined'
       ? JSON.parse(window.localStorage.getItem('appLocalStore') || '[]')
       : [];
   const [localStore, dispatch] = useReducer(
     LocalStoreReducer,
-    initialLocalStore
+    initialLocalStore,
   );
 
-  // Initialize SDK services here
   const sdkServices = useMemo(() => getSDKServices(), []);
   const platformUserSubscription = useRef<Function | undefined>();
 
-  // Track Firebase auth state and subscribe to platformUser
+  // Define isSU based on firebaseUser's email
+  const isSU = useMemo(() => {
+    const superUserEmails = ['ben@gmail.com'];
+    return firebaseUser?.email
+      ? superUserEmails.includes(firebaseUser.email)
+      : false;
+  }, [firebaseUser]);
+
   useEffect(() => {
     const auth = getAuth();
 
@@ -137,7 +146,6 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
         setFirebaseUser(user);
         setAuthUserLoading(true);
 
-        // Subscribe to platform user after successful authentication
         sdkServices.base.backendService.getAuthorization = async () => {
           const jwt = await user.getIdToken();
           return { uid: user.uid, jwt };
@@ -154,11 +162,11 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
               } catch (error) {
                 console.error('Error fetching platform user:', error);
                 helper.showError((error as Error).message);
-                setPlatformUser(undefined); // Reset on error
+                setPlatformUser(undefined);
               } finally {
                 setAuthUserLoading(false);
               }
-            }
+            },
           );
       } else {
         setFirebaseUser(undefined);
@@ -170,7 +178,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     return () => {
       if (platformUserSubscription.current) platformUserSubscription.current();
-      unsubscribe(); // Cleanup Firebase auth state change listener
+      unsubscribe();
     };
   }, [sdkServices]);
 
@@ -193,35 +201,36 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
       showSuccess: (message) => {
         enqueueSnackbar(message, { variant: 'success' });
       },
+      isSU,
       isMobile: responsiveWidth === 'xs',
       authUserLoading,
       height,
       width,
       firebaseUser,
-      platformUser, // Add platformUser to helper
+      platformUser,
       setPlatformUser,
-      signOut: signOutHandler, // Use the custom signOutHandler
+      signOut: signOutHandler,
       signInWithEmailLink: async (link: string) => {
         const email = helper.getLocalStoreValue('signInEmail');
         if (email) {
-          await signInWithEmailLinkHandler(email, link); // Use the custom handler
+          await signInWithEmailLinkHandler(email, link);
         } else {
           console.error('Email is not stored locally.');
         }
       },
-      signInWithCustomToken: signInWithCustomTokenHandler, // Use the custom handler
+      signInWithCustomToken: signInWithCustomTokenHandler,
       setLocalStoreValue: (key: string, value: any) => {
         dispatch({ type: 'SET', data: { key, value } });
         window.localStorage.setItem(
           'appLocalStore',
-          JSON.stringify(localStore)
+          JSON.stringify(localStore),
         );
       },
       deleteLocalStoreValue: (key: string) => {
         dispatch({ type: 'DELETE', data: { key } });
         window.localStorage.setItem(
           'appLocalStore',
-          JSON.stringify(localStore)
+          JSON.stringify(localStore),
         );
       },
       getLocalStoreValue: (key: string) => {
@@ -236,6 +245,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
     firebaseUser,
     localStore,
     platformUser,
+    isSU,
   ]);
 
   return (

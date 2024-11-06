@@ -58,7 +58,7 @@ export const FormBuilder = <Values extends types.IFormBuilderInitialValueType>({
     (updatedStepValues: any) => {
       updateValues(updatedStepValues);
     },
-    [updateValues]
+    [updateValues],
   );
 
   const getValues = useCallback(() => {
@@ -80,7 +80,7 @@ export const FormBuilder = <Values extends types.IFormBuilderInitialValueType>({
 
   const activeStep = useMemo(
     () => steps[activeStepIndex],
-    [activeStepIndex, steps]
+    [activeStepIndex, steps],
   );
 
   if (!activeStep) {

@@ -66,7 +66,7 @@ const FormBuilderStepWOMemo: React.FC<IFormBuilderStepProps> = ({
         }, {}) || {}
       );
     },
-    [fields, getValues]
+    [fields, getValues],
   );
   const formik = useFormik({
     initialValues:

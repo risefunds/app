@@ -27,11 +27,15 @@ const UserProfile = () => {
         if (!appContext.helper.platformUser)
           throw new Error('Platform user not resolved.');
         let creativeUsers =
-          await appContext.sdkServices?.core.CreativeUserEntityService.where(
-            {
-              params: [ { key: 'parentReference.PlatformUser', value: appContext.helper.platformUser.id, operator: '==' }],
-            }
-          );
+          await appContext.sdkServices?.core.CreativeUserEntityService.where({
+            params: [
+              {
+                key: 'parentReference.PlatformUser',
+                value: appContext.helper.platformUser.id,
+                operator: '==',
+              },
+            ],
+          });
 
 
         let creativeUser = creativeUsers?.[0];
@@ -41,7 +45,7 @@ const UserProfile = () => {
               new models.CreativeUserEntityModel({
                 [appContext.helper.platformUser.collection]:
                   appContext.helper.platformUser.id,
-              })
+              }),
             );
         }
 
@@ -53,8 +57,8 @@ const UserProfile = () => {
 
       setLoading(false);
     };
-    if (appContext.helper.platformUser) getCreativeUser();
-  }, [appContext.helper.platformUser]);
+    if (appContext.helper.platformUser && !creativeUser) getCreativeUser();
+  }, [appContext.helper.platformUser, creativeUser]);
 
   // Function to get values for the form
   const getValues = () => {
@@ -94,7 +98,7 @@ const UserProfile = () => {
               if (!creativeUser) throw new Error('Creative user not resolved');
               creativeUser.details = { ...creativeUser.details, ...values };
               await appContext.sdkServices?.core.CreativeUserEntityService.persist(
-                creativeUser
+                creativeUser,
               );
               appContext.helper.showSuccess('Success');
             } catch (error) {

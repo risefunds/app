@@ -10,7 +10,7 @@ export type FirebaseUser = User;
 
 export const signInWithEmailLinkHandler = async (
   email: string,
-  link: string
+  link: string,
 ) => {
   const auth = getAuth();
   try {

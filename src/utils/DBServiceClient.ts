@@ -46,7 +46,7 @@ export class DBServiceClient implements IReferenceDB {
   // Use `getDoc` for a single document
   public async get<Model extends models.IBaseEntityModel>(
     collectionName: string,
-    id: string
+    id: string,
   ): Promise<Model | undefined> {
     const docRef = doc(this.getCollection<Model>(collectionName), id);
     const res = await getDoc(docRef); // Use getDoc here
@@ -59,7 +59,7 @@ export class DBServiceClient implements IReferenceDB {
 
   public async persist<Model extends models.IBaseEntityModel>(
     collectionName: string,
-    data: Model
+    data: Model,
   ): Promise<Model | undefined> {
     if (!data.id) throw new Error('ID is not defined');
     const docRef = doc(this.getCollection<Model>(collectionName), data.id);
@@ -69,7 +69,7 @@ export class DBServiceClient implements IReferenceDB {
 
   private getQueryWithParamsArray = <Model>(
     collectionName: string,
-    queryParams: IWhereParam[] = []
+    queryParams: IWhereParam[] = [],
   ) => {
     let collectionRef = this.getCollection<Model>(collectionName);
     let collectionQuery = query(collectionRef);
@@ -85,11 +85,11 @@ export class DBServiceClient implements IReferenceDB {
   // Use `getDocs` for querying multiple documents
   public async where<Model>(
     collectionName: string,
-    queryParams: IWhereParam[]
+    queryParams: IWhereParam[],
   ): Promise<Model[]> {
     const queryRef = this.getQueryWithParamsArray<Model>(
       collectionName,
-      queryParams
+      queryParams,
     );
 
     const querySnapshot = await getDocs(queryRef); // Use getDocs here for multiple documents
@@ -100,11 +100,11 @@ export class DBServiceClient implements IReferenceDB {
   public subscribe<Model>(
     collectionName: string,
     queryParams: IWhereParam[],
-    callBack: (error?: Error, data?: Model[]) => void
+    callBack: (error?: Error, data?: Model[]) => void,
   ) {
     const queryRef = this.getQueryWithParamsArray<Model>(
       collectionName,
-      queryParams
+      queryParams,
     );
 
     return onSnapshot(
@@ -112,12 +112,12 @@ export class DBServiceClient implements IReferenceDB {
       (querySnapshot) => {
         callBack(
           undefined,
-          querySnapshot.docs.map((doc) => doc.data() as Model)
+          querySnapshot.docs.map((doc) => doc.data() as Model),
         );
       },
       (error) => {
         callBack(error);
-      }
+      },
     );
   }
 
@@ -125,7 +125,7 @@ export class DBServiceClient implements IReferenceDB {
   public subscribeDocument<Model>(
     collectionName: string,
     id: string,
-    callBack: (error?: Error, data?: Model) => void
+    callBack: (error?: Error, data?: Model) => void,
   ) {
     const docRef = doc(this.getCollection<Model>(collectionName), id);
     return onSnapshot(
@@ -135,7 +135,7 @@ export class DBServiceClient implements IReferenceDB {
       },
       (error) => {
         callBack(error);
-      }
+      },
     );
   }
 }

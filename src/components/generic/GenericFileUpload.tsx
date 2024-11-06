@@ -39,7 +39,7 @@ export const GenericFileUpload: React.FC<IGenericFileUploadProps> = ({
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [files, setFiles] = useState<{ url: string; name: string }[]>(
-    props.value
+    props.value,
   );
 
   const onDrop = async (droppedFiles: File[]) => {
@@ -54,7 +54,7 @@ export const GenericFileUpload: React.FC<IGenericFileUploadProps> = ({
         await uploadBytes(fileRef, file);
         const url = await getDownloadURL(fileRef);
         return { url, name: file.name };
-      })
+      }),
     );
 
     setLoading(false);

@@ -16,6 +16,7 @@ export const useAuth = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser({ email: user.email! });
+        console.log({ isSU: appContext.helper.isSU });
       } else {
         router.push('/');
       }

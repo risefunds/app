@@ -44,11 +44,11 @@ export const GenericColumnImageUpload: React.FC<
   const { disableColumns = false, ...genericSingleImageUploadConfig } =
     props.config;
   const [columnMenuRef, setColumnMenuRef] = useState<any | undefined>(
-    undefined
+    undefined,
   );
   const updateFiles = (
     oldFiles: IGenericSingleImageUploadValue[],
-    newFile: IGenericSingleImageUploadValue
+    newFile: IGenericSingleImageUploadValue,
   ) => {
     if (oldFiles.some((efi) => efi.id === newFile.id)) {
       oldFiles = oldFiles.map((ef) => {
@@ -63,7 +63,7 @@ export const GenericColumnImageUpload: React.FC<
 
   const handleChange = (
     fileId: string,
-    newFile?: IGenericSingleImageUploadValue
+    newFile?: IGenericSingleImageUploadValue,
   ) => {
     if (newFile) {
       props.onChange({
