@@ -52,7 +52,7 @@ const UserProfile = () => {
     const getCreativeUser = async () => {
       try {
         setLoading(true);
-        if (!appContext.helper.platformUser)
+        if (!appContext.helper.platformUser)          
           throw new Error('Platform user not resolved.');
 
         // Fetch existing creativeUser linked to platformUser
@@ -69,7 +69,6 @@ const UserProfile = () => {
 
         let creativeUser = creativeUsers?.[0];
         // console.log({ details: creativeUser?.details });
-
         if (!creativeUser) {
           // Create a new creativeUser only if it doesn't already exist
           creativeUser =
