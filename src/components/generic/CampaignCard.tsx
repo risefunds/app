@@ -1,4 +1,6 @@
+"use client";
 import * as React from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter from next/navigation
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -12,6 +14,7 @@ interface CampaignCardProps {
   name: string;
   category: string;
   amountRaised: number;
+  campaignId: string;
   sx?: any;
 }
 
@@ -20,8 +23,15 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
   name,
   category,
   amountRaised,
+  campaignId,
   sx,
 }) => {
+  const router = useRouter();
+
+  const handleButtonClick = () => {
+    router.push(`/campaigns/${campaignId}`);
+  };
+
   return (
     <Card sx={{ maxWidth: 345, borderRadius: '8px', boxShadow: 3, ...sx }}>
       <CardMedia
@@ -56,6 +66,7 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
             padding: '0.5rem 2rem',
             borderRadius: '8px',
           }}
+          onClick={handleButtonClick} // Navigate on click
         >
           Back this campaign
         </Button>
