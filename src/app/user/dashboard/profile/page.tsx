@@ -25,13 +25,20 @@ const UserProfile = () => {
   >(undefined);
   const [loading, setLoading] = useState(true);
 
-  // Isolate creativeUser fetching logic with `isFetchingCreativeUser` guard
+  // Use ref to track whether creativeUser has been initialized
+  const isFetchingCreativeUser = useRef(false);
+
   useEffect(() => {
     const getCreativeUser = async () => {
       try {
         setLoading(true);
         if (!appContext.helper.platformUser)
           throw new Error('Platform user not resolved.');
+
+        // Check if the user is already fetching to prevent duplicates
+        if (isFetchingCreativeUser.current) return;
+
+        isFetchingCreativeUser.current = true;
 
         // Fetch existing creativeUser linked to platformUser
         const creativeUsers =
@@ -65,15 +72,15 @@ const UserProfile = () => {
         appContext.helper.showError(error);
       } finally {
         setLoading(false);
+        isFetchingCreativeUser.current = false;
       }
     };
 
     // Only fetch/create creativeUser if platformUser exists and creativeUser hasn't been fetched/created yet
-    if (appContext.helper.platformUser) {
+    if (appContext.helper.platformUser && !creativeUser) {
       getCreativeUser();
     }
-    setLoading(false);
-  }, [appContext.helper.platformUser]);
+  }, [appContext.helper.platformUser, creativeUser]);
 
   const getProfileValues = () => (creativeUser && creativeUser.details) || {};
 
