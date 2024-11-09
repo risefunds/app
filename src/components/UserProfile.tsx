@@ -74,7 +74,7 @@ const UserProfile = () => {
   }
 
   return (
-    <ProfileLayout pageTitle="Register">
+    <ProfileLayout>
       <Typography
         component="h2"
         sx={{

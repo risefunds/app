@@ -30,10 +30,11 @@ const UserProfile = () => {
     const getCreativeUser = async () => {
       try {
         setLoading(true);
-        if (!appContext.helper.platformUser)
+        if (!appContext.helper.platformUser) {
           throw new Error('Platform user not resolved.');
+        }
 
-        // Fetch existing creativeUser linked to platformUser
+        // Fetch using whereViaParent or adjust path as needed
         const creativeUsers =
           await appContext.sdkServices?.core.CreativeUserEntityService.where({
             params: [
@@ -49,7 +50,6 @@ const UserProfile = () => {
         console.log({ details: creativeUser?.details });
 
         if (!creativeUser) {
-          // Create a new creativeUser only if it doesn't already exist
           creativeUser =
             await appContext.sdkServices?.core.CreativeUserEntityService.persist(
               new models.CreativeUserEntityModel({
@@ -68,11 +68,9 @@ const UserProfile = () => {
       }
     };
 
-    // Only fetch/create creativeUser if platformUser exists and creativeUser hasn't been fetched/created yet
     if (appContext.helper.platformUser) {
       getCreativeUser();
     }
-    setLoading(false);
   }, [appContext.helper.platformUser]);
 
   const getProfileValues = () => (creativeUser && creativeUser.details) || {};
