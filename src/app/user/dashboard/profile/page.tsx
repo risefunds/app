@@ -7,7 +7,6 @@ import { NavigationLayout } from 'layouts/NavigationLayout';
 import { formSchemas, models } from '@risefunds/sdk';
 import { ProfileLayout } from 'layouts/ProfileLayout';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import { FormBuilderJSON } from 'components/FormBuilder';
 import Typography from '@mui/material/Typography';
@@ -17,24 +16,28 @@ import CircularProgress from '@mui/material/CircularProgress';
 const UserProfile = () => {
   const { user } = useAuth();
   const appContext = useContext(AppContext);
-  const searchParams = useSearchParams();
-  const router = useRouter();
 
   const [creativeUser, setCreativeUser] = useState<
     models.CreativeUserEntityModel | undefined
   >(undefined);
   const [loading, setLoading] = useState(true);
 
-  // Isolate creativeUser fetching logic with `isFetchingCreativeUser` guard
+  // Use ref to track whether creativeUser has been initialized
+  const isFetchingCreativeUser = useRef(false);
+
   useEffect(() => {
     const getCreativeUser = async () => {
       try {
         setLoading(true);
-        if (!appContext.helper.platformUser) {
+        if (!appContext.helper.platformUser)
           throw new Error('Platform user not resolved.');
-        }
+        console.log({ platformUser: appContext.helper.platformUser });
+        // Check if the user is already fetching to prevent duplicates
+        if (isFetchingCreativeUser.current) return;
 
-        // Fetch using whereViaParent or adjust path as needed
+        isFetchingCreativeUser.current = true;
+
+        // Fetch existing creativeUser linked to platformUser
         const creativeUsers =
           await appContext.sdkServices?.core.CreativeUserEntityService.where({
             params: [
@@ -47,9 +50,9 @@ const UserProfile = () => {
           });
 
         let creativeUser = creativeUsers?.[0];
-        console.log({ details: creativeUser?.details });
 
         if (!creativeUser) {
+          // Create a new creativeUser only if it doesn't already exist
           creativeUser =
             await appContext.sdkServices?.core.CreativeUserEntityService.persist(
               new models.CreativeUserEntityModel({
@@ -65,13 +68,15 @@ const UserProfile = () => {
         appContext.helper.showError(error);
       } finally {
         setLoading(false);
+        isFetchingCreativeUser.current = false;
       }
     };
 
-    if (appContext.helper.platformUser) {
+    // Only fetch/create creativeUser if platformUser exists and creativeUser hasn't been fetched/created yet
+    if (appContext.helper.platformUser && !creativeUser) {
       getCreativeUser();
     }
-  }, [appContext.helper.platformUser]);
+  }, [appContext.helper.platformUser, creativeUser]);
 
   const getProfileValues = () => (creativeUser && creativeUser.details) || {};
 
