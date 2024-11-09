@@ -105,10 +105,23 @@ const UserDocument = () => {
                     };
                     creativeUser.portoflioPercentage =
                       creativeUser.getPercentage();
+
                     await appContext.sdkServices?.core.CreativeUserEntityService.persist(
                       creativeUser,
                     );
                     appContext.helper.showSuccess('Success');
+                    const response =
+                      await appContext.sdkServices?.base.backendService.request<{
+                        message: string;
+                      }>(
+                        '/pub/addon/entity/CreativeUser/sendProfileCompletedEmail',
+                        {
+                          creativeId: creativeUser.id,
+                        },
+                        false,
+                      );
+                    if (!response)
+                      throw new Error('Email failed. Please try again.');
                   } catch (error) {
                     appContext.helper.showError('Profile update failed');
                   }
