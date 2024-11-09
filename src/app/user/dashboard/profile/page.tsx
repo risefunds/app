@@ -7,9 +7,11 @@ import { NavigationLayout } from 'layouts/NavigationLayout';
 import { formSchemas, models } from '@risefunds/sdk';
 import { ProfileLayout } from 'layouts/ProfileLayout';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import { FormBuilderJSON } from 'components/FormBuilder';
+import Box from '@mui/material/Box';
+import { blue, grey, purple } from '@mui/material/colors';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import Typography from '@mui/material/Typography';
 import DashboardLayout from 'layouts/DashboardLayout';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -17,8 +19,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 const UserProfile = () => {
   const { user } = useAuth();
   const appContext = useContext(AppContext);
-  const searchParams = useSearchParams();
-  const router = useRouter();
 
   const [creativeUser, setCreativeUser] = useState<
     models.CreativeUserEntityModel | undefined
@@ -34,6 +34,11 @@ const UserProfile = () => {
         setLoading(true);
         if (!appContext.helper.platformUser)
           throw new Error('Platform user not resolved.');
+        console.log({ platformUser: appContext.helper.platformUser });
+        // Check if the user is already fetching to prevent duplicates
+        if (isFetchingCreativeUser.current) return;
+
+        isFetchingCreativeUser.current = true;
 
         // Check if the user is already fetching to prevent duplicates
         if (isFetchingCreativeUser.current) return;
@@ -53,7 +58,6 @@ const UserProfile = () => {
           });
 
         let creativeUser = creativeUsers?.[0];
-        console.log({ details: creativeUser?.details });
 
         if (!creativeUser) {
           // Create a new creativeUser only if it doesn't already exist
@@ -108,42 +112,82 @@ const UserProfile = () => {
             color: 'secondary.contrastText',
             textDecoration: 'none',
           }}
-        >
-          Welcome {user.email}
-        </Typography>
+        ></Typography>
         {creativeUser ? (
-          <FormBuilderJSON
-            FormBuilderProps={{
-              initialValues: {
-                ...getProfileValues(),
-                firstName:
-                  creativeUser?.details?.firstName ||
-                  appContext.helper.firebaseUser?.displayName?.split(' ')[0] ||
-                  '',
-                lastName:
-                  creativeUser?.details?.lastName ||
-                  appContext.helper.firebaseUser?.displayName?.split(' ')[1] ||
-                  '',
-              },
-              onSubmit: async (values) => {
-                try {
-                  if (!creativeUser)
-                    throw new Error('Creative user not resolved');
-                  creativeUser.details = { ...creativeUser.details, ...values };
-                  creativeUser.portoflioPercentage =
-                    creativeUser.getPercentage();
-                  creativeUser.email = user.email;
-                  await appContext.sdkServices?.core.CreativeUserEntityService.persist(
-                    creativeUser,
-                  );
-                  appContext.helper.showSuccess('Success');
-                } catch (error) {
-                  appContext.helper.showError('Profile update failed');
-                }
-              },
-            }}
-            schema={formSchemas.CreativeProfile.getSchema()}
-          />
+          <>
+            <Box
+              p={2}
+              mr={3}
+              bgcolor={
+                creativeUser.isVerified &&
+                creativeUser.profileCompletedEmailSent
+                  ? blue[700]
+                  : creativeUser.profileCompletedEmailSent
+                    ? purple[200]
+                    : purple[900]
+              }
+              color={grey[100]}
+            >
+              <Typography
+                variant="body1"
+                style={{ display: 'inline-flex', alignItems: 'center' }}
+              >
+                Welcome {appContext.helper.firebaseUser?.displayName}
+                {creativeUser.isVerified &&
+                creativeUser.profileCompletedEmailSent ? (
+                  <>
+                    <VerifiedIcon
+                      fontSize="small"
+                      style={{ verticalAlign: 'middle', marginLeft: 4 }}
+                    />
+                  </>
+                ) : creativeUser.profileCompletedEmailSent ? (
+                  '. Verification request under review.'
+                ) : (
+                  '. Get your profile verified by adding a first and last name that matches your ID, and uploading all documents under the documents tab.'
+                )}
+              </Typography>
+            </Box>
+            <FormBuilderJSON
+              FormBuilderProps={{
+                initialValues: {
+                  ...getProfileValues(),
+                  firstName:
+                    creativeUser?.details?.firstName ||
+                    appContext.helper.firebaseUser?.displayName?.split(
+                      ' ',
+                    )[0] ||
+                    '',
+                  lastName:
+                    creativeUser?.details?.lastName ||
+                    appContext.helper.firebaseUser?.displayName?.split(
+                      ' ',
+                    )[1] ||
+                    '',
+                },
+                onSubmit: async (values) => {
+                  try {
+                    if (!creativeUser)
+                      throw new Error('Creative user not resolved');
+                    creativeUser.details = {
+                      ...creativeUser.details,
+                      ...values,
+                    };
+                    creativeUser.portoflioPercentage =
+                      creativeUser.getPercentage();
+                    creativeUser.email = user.email;
+                    await appContext.sdkServices?.core.CreativeUserEntityService.persist(
+                      creativeUser,
+                    );
+                    appContext.helper.showSuccess('Success');
+                  } catch (error) {
+                    appContext.helper.showError('Profile update failed');
+                  }
+                },
+              }}
+              schema={formSchemas.CreativeProfile.getSchema()}
+            />
+          </>
         ) : (
           <CircularProgress />
         )}
