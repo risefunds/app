@@ -177,6 +177,8 @@ const UserCampaign = () => {
         });
 
       if (listedCampaigns) {
+        console.log({ listedCampaigns });
+
         setCampaigns(listedCampaigns);
       }
       appContext.helper.showSuccess('Campaign Saved');

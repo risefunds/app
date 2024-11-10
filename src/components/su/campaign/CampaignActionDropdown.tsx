@@ -79,13 +79,13 @@ export const CampaignActionDropdown: React.FC<
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
-              router.push(`/project/${props.row.id}`);
+              router.push(`/campaigns/${props.row.id}`);
             }}
           >
             <ListItemIcon>
               <Visibility fontSize="small" />
             </ListItemIcon>
-            <ListItemText>View Project</ListItemText>
+            <ListItemText>View Campaign</ListItemText>
           </MenuItem>
           <MenuItem
             onClick={async () => {
@@ -106,7 +106,7 @@ export const CampaignActionDropdown: React.FC<
             <ListItemIcon>
               <DeleteIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>Archive Project</ListItemText>
+            <ListItemText>Archive Campaign</ListItemText>
           </MenuItem>
         </MenuList>
       </Menu>

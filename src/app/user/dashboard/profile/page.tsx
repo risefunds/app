@@ -40,11 +40,6 @@ const UserProfile = () => {
 
         isFetchingCreativeUser.current = true;
 
-        // Check if the user is already fetching to prevent duplicates
-        if (isFetchingCreativeUser.current) return;
-
-        isFetchingCreativeUser.current = true;
-
         // Fetch existing creativeUser linked to platformUser
         const creativeUsers =
           await appContext.sdkServices?.core.CreativeUserEntityService.where({

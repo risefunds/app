@@ -108,18 +108,27 @@ export const CreativeActionDropdown: React.FC<
               </MenuItem>
             </>
           )}
-          {profileCompletion > 80 && !isVerified && (
+          {profileCompletion > 85 && !isVerified && (
             <MenuItem
               onClick={async () => {
                 try {
-                  creativeUser.isVerified = true;
-                  await appContext.sdkServices?.core.CreativeUserEntityService.persist(
-                    creativeUser,
-                  );
-                  await handleVerifyRevalidate();
                   appContext.helper.showSuccess(
-                    'User Verification updated successfully',
+                    "Email Scheduled. Please wait whilst it's being sent...",
                   );
+
+                  const response =
+                    await appContext.sdkServices?.base.backendService.request<{
+                      message: string;
+                    }>('/pub/addon/entity/CreativeUser/sendVerificationEmail', {
+                      creativeId: props.row.id,
+                    });
+                  console.log();
+                  if (!response) throw new Error('Not implemented');
+                  appContext.helper.showSuccess(response.message);
+                  await handleVerifyRevalidate();
+                  // appContext.helper.showSuccess(
+                  //   'User Verification updated successfully',
+                  // );
                 } catch (error) {
                   appContext.helper.showError((error as Error).message);
                 }
