@@ -39,20 +39,20 @@ export const CampaignDataTable: React.FC<ICampaignDataTableProps> = (props) => {
     {
       field: `creativeId`,
       headerName: 'Creative ID',
-      valueFormatter: (params: any) => {
-        console.log('params:', params);
-        return params?.row?.getSingleParentMandatoryReference(
+      valueGetter: (params: any, row) => {
+        // console.log('params:', params);
+        return row?.getSingleParentMandatoryReference(
           models.CreativeUserEntityModel.collection,
         );
       },
     },
     {
-      field: 'title',
+      field: 'campaignTitle',
       headerName: 'Title',
       flex: 0.15,
-      valueGetter: (params: { row: models.CampaignEntityModel }) => {
-        console.log('params:', params);
-        params?.row?.campaignTitle || '';
+      valueGetter: (params: models.CampaignEntityModel, row) => {
+        console.log('params:', row);
+        return row?.campaignTitle;
       },
     },
     {
@@ -101,7 +101,7 @@ export const CampaignDataTable: React.FC<ICampaignDataTableProps> = (props) => {
           rows={props.campaigns}
           columns={columns}
           columnVisibilityModel={{
-            id: false,
+            creativeId: false,
           }}
           onFilterModelChange={setFilterModel}
           filterModel={filterModel}
@@ -111,7 +111,7 @@ export const CampaignDataTable: React.FC<ICampaignDataTableProps> = (props) => {
           }}
           slotProps={{
             toolbar: {
-              creatives: props.campaigns,
+              campaigns: props.campaigns,
             },
           }}
         />
@@ -133,7 +133,7 @@ const CustomToolbar = (props: any) => {
           <Grid container alignItems="center">
             <Grid>
               <Typography variant="body2" sx={{ ml: 1 }}>
-                <b>Total Creatives</b>: {(props.creatives || []).length}
+                <b>Total Campaigns</b>: {(props.campaigns || []).length}
               </Typography>
             </Grid>
           </Grid>

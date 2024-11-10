@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import * as React from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter from next/navigation
 import Card from '@mui/material/Card';
@@ -13,7 +13,7 @@ interface CampaignCardProps {
   img: string;
   name: string;
   category: string;
-  amountRaised: number;
+  amountRaised?: string;
   campaignId: string;
   sx?: any;
 }
@@ -53,23 +53,47 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
         <Typography variant="body2" color="text.secondary">
           {category.charAt(0).toUpperCase() + category.slice(1)}
         </Typography>
-        <Box sx={{ mt: 1, fontWeight: 'bold', fontSize: '1rem' }}>
-          ${amountRaised.toLocaleString()} raised
-        </Box>
+        {amountRaised && (
+          <Box sx={{ mt: 1, fontWeight: 'bold', fontSize: '1rem' }}>
+            ${amountRaised} raised
+          </Box>
+        )}
       </CardContent>
       <CardActions>
-        <Button
-          size="small"
-          variant="outlined"
+        <Box
           sx={{
-            textTransform: 'none',
-            padding: '0.5rem 2rem',
-            borderRadius: '8px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
           }}
-          onClick={handleButtonClick} // Navigate on click
         >
-          Back this campaign
-        </Button>
+          <Button
+            size="small"
+            variant="contained"
+            sx={{
+              textTransform: 'none',
+              padding: '0.5rem 1rem',
+              borderRadius: '5px',
+            }}
+            onClick={handleButtonClick}
+          >
+            Back this campaign
+          </Button>
+          <Button
+            size="small"
+            variant="outlined"
+            sx={{
+              textTransform: 'none',
+              padding: '0.5rem',
+              borderRadius: '5px',
+            }}
+            onClick={() => {
+              router.push(`/campaigns/${campaignId}`);
+            }}
+          >
+            View campaign
+          </Button>
+        </Box>
       </CardActions>
     </Card>
   );

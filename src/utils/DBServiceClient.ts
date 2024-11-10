@@ -75,8 +75,10 @@ export class DBServiceClient implements IReferenceDB {
     let collectionQuery = query(collectionRef);
 
     queryParams.forEach((qp) => {
-      const condition = where(qp.key, qp.operator as WhereFilterOp, qp.value);
-      collectionQuery = query(collectionRef, condition); // Add conditions to query
+      collectionQuery = query(
+        collectionQuery,
+        where(qp.key, qp.operator as WhereFilterOp, qp.value),
+      );
     });
 
     return collectionQuery;

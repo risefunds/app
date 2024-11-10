@@ -132,7 +132,7 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Define isSU based on firebaseUser's email
   const isSU = useMemo(() => {
-    const superUserEmails = ['ben@gmail.com'];
+    const superUserEmails = ['ben@gmail.com', 'benedictuyioghosa@gmail.com'];
     return firebaseUser?.email
       ? superUserEmails.includes(firebaseUser.email)
       : false;

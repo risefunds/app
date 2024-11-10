@@ -97,6 +97,9 @@ const UserDocument = () => {
                 initialValues: { ...getDocumentValues() },
                 onSubmit: async (values) => {
                   try {
+                    appContext.helper.showSuccess(
+                      "Email Scheduled. Please wait whilst it's being sent...",
+                    );
                     if (!creativeUser)
                       throw new Error('Creative user not resolved');
                     creativeUser.documents = {

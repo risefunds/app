@@ -8,6 +8,12 @@ import {
   GridFilterModel,
   GridToolbar,
 } from '@mui/x-data-grid';
+import { IconButton } from '@mui/material';
+import PhotoIcon from '@mui/icons-material/Photo';
+import BadgeIcon from '@mui/icons-material/Badge';
+import HomeIcon from '@mui/icons-material/Home';
+import WorkIcon from '@mui/icons-material/Work';
+import Tooltip from '@mui/material/Tooltip';
 import React, { useState } from 'react';
 import { RenderCarouselAction } from './RenderCarouselAction';
 import { CreativeActionDropdown } from './CreativeActionDropdown';
@@ -68,7 +74,8 @@ export const CreativeDataTable: React.FC<ICreativeDataTableProps> = (props) => {
                 <Grid container direction="column">
                   <Grid>
                     <Typography variant="body2">
-                      {details.firstName || params.row.details?.firstName}
+                      {details.firstName || params.row.details?.firstName}{' '}
+                      {details.lastName || params.row.details?.lastName}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -112,34 +119,132 @@ export const CreativeDataTable: React.FC<ICreativeDataTableProps> = (props) => {
       },
     },
     {
-      field: 'websites',
-      headerName: 'External Websites',
+      field: 'sin',
+      headerName: 'SIN',
       flex: 0.15,
       renderCell: (params) => {
-        const details = params.row?.details;
+        const documents = params.row?.documents;
         return (
           <>
             <Grid container direction="column">
-              {details && (
+              {documents && (
                 <Grid>
-                  <Typography variant="body2">
-                    {details.website || ''}
-                  </Typography>
+                  <Typography variant="body2">{documents.sin || ''}</Typography>
                 </Grid>
               )}
-              {details && (
+            </Grid>
+          </>
+        );
+      },
+    },
+    {
+      field: 'documents',
+      headerName: 'Documents',
+      flex: 0.15,
+      renderCell: (params) => {
+        const documents = params.row?.documents;
+        return (
+          <>
+            <Grid
+              container
+              direction="row"
+              justifyContent="start"
+              alignItems="flex-start"
+            >
+              {documents && documents.digitalPhoto && (
                 <Grid>
-                  <Typography variant="body2">{details.twitter}</Typography>
+                  <Tooltip title="Digital photo" arrow>
+                    <IconButton
+                      onClick={() => {
+                        if (window && documents.digitalPhoto) {
+                          window
+                            .open(
+                              documents.digitalPhoto.files[0].url,
+                              '_blank',
+                              'noopener=true,noreferrer=true',
+                            )
+                            ?.focus();
+                        }
+                      }}
+                    >
+                      <PhotoIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
                 </Grid>
               )}
-              {details && (
+              {documents && documents.identity && (
                 <Grid>
-                  <Typography variant="body2">{details.instagram}</Typography>
+                  <Tooltip title="ID card" arrow>
+                    <IconButton
+                      onClick={() => {
+                        if (window && documents.identity) {
+                          window
+                            .open(
+                              (
+                                documents?.identity as unknown as {
+                                  url: string;
+                                }[]
+                              )[0]?.url,
+                              '_blank',
+                              'noopener=true,noreferrer=true',
+                            )
+                            ?.focus();
+                        }
+                      }}
+                    >
+                      <BadgeIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
                 </Grid>
               )}
-              {details && (
+              {documents && documents.proofOfAdress && (
                 <Grid>
-                  <Typography variant="body2">{details.facebook}</Typography>
+                  <Tooltip title="ID card" arrow>
+                    <IconButton
+                      onClick={() => {
+                        if (window && documents.proofOfAdress) {
+                          window
+                            .open(
+                              (
+                                documents?.proofOfAdress as unknown as {
+                                  url: string;
+                                }[]
+                              )[0]?.url,
+                              '_blank',
+                              'noopener=true,noreferrer=true',
+                            )
+                            ?.focus();
+                        }
+                      }}
+                    >
+                      <HomeIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              )}
+              {documents && documents.sinPhoto && (
+                <Grid>
+                  <Tooltip title="ID card" arrow>
+                    <IconButton
+                      onClick={() => {
+                        if (window && documents.sinPhoto) {
+                          window
+                            .open(
+                              (
+                                documents?.sinPhoto as unknown as {
+                                  url: string;
+                                }[]
+                              )[0]?.url,
+                              '_blank',
+                              'noopener=true,noreferrer=true',
+                            )
+                            ?.focus();
+                        }
+                      }}
+                    >
+                      <WorkIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
                 </Grid>
               )}
             </Grid>

@@ -1,5 +1,7 @@
 'use client';
-
+import { AppContext } from 'context/AppContext';
+import { formSchemas, models } from '@risefunds/sdk';
+import { useEffect, useState, useContext } from 'react';
 import { NavigationLayout } from 'layouts/NavigationLayout';
 import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
@@ -10,6 +12,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
+import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
 import { CampaignCard } from 'components/generic/CampaignCard';
 
@@ -58,45 +61,81 @@ const itemData = [
 
 const popularCampaigns = [
   {
+    campaignId: '1',
     img: '/Home/pop1.webp',
     name: 'ChessUp 2 : Chess.com on a Real Board',
     category: 'tech',
-    amountRaised: 2512191,
+    amountRaised: '2512191',
   },
   {
+    campaignId: '1',
     img: '/Home/pop2.webp',
     name: 'OCTOPUNX: New Site and Content for Octopunk Media',
     category: 'web series & tv shows',
-    amountRaised: 16284,
+    amountRaised: '16284',
   },
   {
+    campaignId: '2',
     img: '/Home/pop3.webp',
     name: 'Odin2 Portal: The Ultimate 7 OLED Gaming Handheld',
     category: 'video games',
-    amountRaised: 128689,
+    amountRaised: '128689',
   },
   {
+    campaignId: '3',
     img: '/Home/pop4.webp',
     name: 'C&Rsenal SOFT T-Shirts 2024',
     category: 'arts',
-    amountRaised: 45125,
+    amountRaised: '45125',
   },
   {
+    campaignId: '4',
     img: '/Home/pop5.webp',
     name: 'Kabata: Take the Guesswork Out of Your Workout.',
     category: 'health & fitness',
-    amountRaised: 599624,
+    amountRaised: '599624',
   },
   {
+    campaignId: '5',
     img: '/Home/pop6.webp',
     name: 'Meraki: Ultimate Espresso',
     category: 'home',
-    amountRaised: 2668285,
+    amountRaised: '2668285',
   },
 ];
 
 export default function Home() {
   const router = useRouter();
+  const appContext = useContext(AppContext);
+  const [campaigns, setCampaigns] = useState<models.CampaignEntityModel[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!appContext.helper.authUserLoading) {
+        const featuredCampaigns =
+          await appContext.sdkServices?.core.CampaignEntityService.where({
+            params: [
+              {
+                key: 'archive',
+                value: false,
+                operator: '==',
+              },
+              {
+                key: 'featured',
+                value: 'featured',
+                operator: 'array-contains',
+              },
+            ],
+          });
+        if (featuredCampaigns) {
+          setCampaigns(featuredCampaigns);
+        }
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [appContext.helper.authUserLoading]);
   return (
     <NavigationLayout>
       <Box sx={{ flexGrow: 1 }}>
@@ -270,7 +309,7 @@ export default function Home() {
         <Grid
           container
           spacing={3}
-          sx={{ margin: '3rem', width: '100%' }}
+          sx={{ margin: '2rem', width: '100%' }}
           justifyContent="center"
         >
           {popularCampaigns.map((campaign) => (
@@ -286,9 +325,33 @@ export default function Home() {
                   flexDirection: 'column',
                   height: '100%',
                 }}
+                campaignId={campaign.campaignId}
               />
             </Grid>
           ))}
+          {!loading ? (
+            campaigns &&
+            campaigns.map((campaign) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={campaign.name}>
+                <CampaignCard
+                  img={campaign.campaignCard?.files[0].url!}
+                  name={campaign.campaignTitle}
+                  category={campaign.campaignCategory?.label.toString()!}
+                  // Set the height and use flex for equal height
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                  }}
+                  campaignId={campaign.id}
+                />
+              </Grid>
+            ))
+          ) : (
+            <>
+              <CircularProgress size="3rem" />
+            </>
+          )}
         </Grid>
         <Box sx={{ width: '100%', textAlign: 'center' }}>
           <Button

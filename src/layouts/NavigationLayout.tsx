@@ -216,6 +216,8 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                               router.push('/'); // Redirect to home page after logout
                             } else if (setting === 'SU') {
                               router.push('/user/su/creative');
+                            } else if (setting === 'Campaign') {
+                              router.push('/user/campaign');
                             } else {
                               // Navigate to the dashboard with a specific tab (profile or campaign)
                               router.push(

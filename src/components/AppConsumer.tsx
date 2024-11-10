@@ -37,9 +37,9 @@ export const AppConsumerComponent: React.FC<{
   }, [sdkServices, router]);
 
   // Render a loading state while Firebase auth state is being determined
-  if (loading) {
-    return <CircularProgress color="primary" sx={{ margin: '1rem' }} />;
-  }
+  // if (loading) {
+  //   return <CircularProgress color="primary" sx={{ margin: '1rem' }} />;
+  // }
 
   return (
     <AppContextProvider>
@@ -47,6 +47,8 @@ export const AppConsumerComponent: React.FC<{
         Component={Component}
         pageProps={pageProps}
         pathname={pathname}
+        authUser={authUser}
+        loading={loading}
       />
     </AppContextProvider>
   );
@@ -56,7 +58,9 @@ const ProtectedRoute: React.FC<{
   Component: any;
   pageProps: any;
   pathname: string;
-}> = ({ Component, pageProps, pathname }) => {
+  authUser: FirebaseUser | null;
+  loading: boolean;
+}> = ({ Component, pageProps, pathname, authUser, loading }) => {
   const { helper } = useContext(AppContext);
   const router = useRouter();
 
@@ -70,10 +74,9 @@ const ProtectedRoute: React.FC<{
     }
   }, [authUserLoading, isProtectedRoute, isSU, router]);
 
-  // Render loading state if authUserLoading is true
-  // if (authUserLoading) {
-  //   return <CircularProgress color="primary" sx={{ margin: '1rem' }} />;
-  // }
+  if (loading && isProtectedRoute) {
+    return <CircularProgress color="primary" sx={{ margin: '1rem' }} />;
+  }
 
   // Render the component if user is authorized or route is not protected
   return <Component {...pageProps} />;
