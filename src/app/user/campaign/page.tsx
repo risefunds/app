@@ -69,13 +69,13 @@ const UserCampaign = () => {
             await appContext.sdkServices?.core.CampaignEntityService.where({
               params: [
                 {
-                  key: 'archive',
-                  value: false,
+                  key: 'parentReference.CreativeUser',
+                  value: creativeUser.id,
                   operator: '==',
                 },
                 {
-                  key: 'parentReference.CreativeUser',
-                  value: creativeUser.id,
+                  key: 'archive',
+                  value: false,
                   operator: '==',
                 },
               ],
