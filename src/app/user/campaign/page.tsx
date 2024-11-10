@@ -59,9 +59,6 @@ const UserCampaign = () => {
           });
 
         let creativeUser = creativeUsers?.[0];
-        console.log({
-          creativeUser: creativeUser?.parentReference.PlatformUser,
-        });
         setCreativeUser(creativeUser);
 
         if (creativeUser) {
@@ -80,8 +77,6 @@ const UserCampaign = () => {
                 },
               ],
             });
-
-          console.log({ creativeUser: creativeUserCampaigns });
 
           if (creativeUserCampaigns) {
             setCampaigns(creativeUserCampaigns);
@@ -145,8 +140,6 @@ const UserCampaign = () => {
 
       if (selectedCampaign) {
         // Update an existing campaign
-        // selectedCampaign.details = { ...selectedCampaign, ...values };
-        console.log({ selectedCampaign });
 
         selectedCampaign.campaignTitle = values.campaignTitle;
         selectedCampaign.campaignTagline = values.campaignTagline;
@@ -177,8 +170,6 @@ const UserCampaign = () => {
         });
 
       if (listedCampaigns) {
-        console.log({ listedCampaigns });
-
         setCampaigns(listedCampaigns);
       }
       appContext.helper.showSuccess('Campaign Saved');
