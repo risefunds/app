@@ -1,10 +1,10 @@
 import {
-  getStorage,
   ref as storageRef,
   uploadBytes,
   getDownloadURL,
   connectStorageEmulator,
 } from 'firebase/storage';
+import { storage } from 'utils/firebaseConfig';
 import { v4 } from 'uuid';
 import { useDropzone } from 'react-dropzone';
 import { useState, useEffect } from 'react';
@@ -44,13 +44,19 @@ export const GenericFileUpload: React.FC<IGenericFileUploadProps> = ({
 
   const onDrop = async (droppedFiles: File[]) => {
     setLoading(true);
-    const storage = getStorage();
-    connectStorageEmulator(storage, 'localhost', 9199); // Connect to the emulator
+    // const storage = getStorage();
+    // connectStorageEmulator(storage, 'localhost', 9199);
 
     const storageFiles = await Promise.all(
       droppedFiles.map(async (file) => {
         const fileId = v4();
-        const fileRef = storageRef(storage, `${props.config.path}/${fileId}`);
+        const fileRef = storageRef(
+          storage,
+          `${
+            process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
+            'risefunds.appspot.com'
+          }/${fileId}`,
+        );
         await uploadBytes(fileRef, file);
         const url = await getDownloadURL(fileRef);
         return { url, name: file.name };
