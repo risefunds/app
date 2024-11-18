@@ -258,7 +258,10 @@ const UserCampaign = () => {
           </Grid>
         </Container>
       ) : (
-        <>You are not allowed to create a campaign</>
+        <>
+          You are not allowed to create a campaign. Upload all the required
+          documents to get your profile verified
+        </>
       )}
     </NavigationLayout>
   );

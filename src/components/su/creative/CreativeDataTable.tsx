@@ -199,7 +199,7 @@ export const CreativeDataTable: React.FC<ICreativeDataTableProps> = (props) => {
               )}
               {documents && documents.proofOfAdress && (
                 <Grid>
-                  <Tooltip title="ID card" arrow>
+                  <Tooltip title="Address" arrow>
                     <IconButton
                       onClick={() => {
                         if (window && documents.proofOfAdress) {
@@ -224,7 +224,7 @@ export const CreativeDataTable: React.FC<ICreativeDataTableProps> = (props) => {
               )}
               {documents && documents.sinPhoto && (
                 <Grid>
-                  <Tooltip title="ID card" arrow>
+                  <Tooltip title="SIN" arrow>
                     <IconButton
                       onClick={() => {
                         if (window && documents.sinPhoto) {
