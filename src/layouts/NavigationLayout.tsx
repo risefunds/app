@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout } from './Layout';
 import { useRouter } from 'next/navigation';
 import { useAuth } from 'hooks/useAuth';
@@ -15,11 +15,10 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import Stack from '@mui/material/Stack';
 import { LogoGraphic } from 'components/Graphics/LogoGraphic';
 
-const pages: [] = [];
+const pages = ['aboutUs', 'contactUs']; 
 const settings = ['Profile', 'Campaign', 'Logout'];
 
 export interface INavigationLayoutProps {
@@ -38,18 +37,16 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
   noUserSettings = false,
   ...props
 }) => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null,
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null,
-  );
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const { user, appContext } = useAuth();
+  const router = useRouter();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -61,10 +58,6 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const router = useRouter();
-  // const isMobile = appContext.helper.isMobile
-  const [mobileMenu, setMobileMenu] = useState(false);
 
   useEffect(() => {
     if (appContext.helper.isSU && !settings.includes('SU')) {
@@ -93,6 +86,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                 </Box>
               </Link>
 
+              {/* Mobile Menu */}
               <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                 <IconButton
                   size="large"
@@ -121,38 +115,27 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                   sx={{ display: { xs: 'block', md: 'none' } }}
                 >
                   {pages.map((page) => (
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <MenuItem
+                      key={page}
+                      onClick={() => {
+                        handleCloseNavMenu();
+                        router.push(`/${page}`);
+                      }}
+                    >
                       <Typography sx={{ textAlign: 'center' }}>
-                        {page}
+                        {page.replace('Us', ' Us')}
                       </Typography>
                     </MenuItem>
                   ))}
                 </Menu>
               </Box>
-              <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-              <Typography
-                variant="h5"
-                noWrap
-                component="a"
-                href="#app-bar-with-responsive-menu"
-                sx={{
-                  mr: 2,
-                  display: { xs: 'flex', md: 'none' },
-                  flexGrow: 1,
-                  fontSize: '1.2rem',
-                  fontWeight: 700,
-                  letterSpacing: '.3rem',
-                  color: 'secondary.contrastText',
-                  textDecoration: 'none',
-                }}
-              >
-                LOGO
-              </Typography>
+
+              {/* Desktop Menu */}
               <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                 {pages.map((page) => (
                   <Button
                     key={page}
-                    onClick={handleCloseNavMenu}
+                    onClick={() => router.push(`/${page}`)}
                     sx={{
                       my: 2,
                       color: 'secondary.contrastText',
@@ -160,10 +143,11 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                       fontSize: '1.2rem',
                     }}
                   >
-                    {page}
+                    {page.replace('Us', ' Us')}
                   </Button>
                 ))}
               </Box>
+
               <Box sx={{ flexGrow: 0 }}>
                 {!user ? (
                   <Stack spacing={2} direction="row">
@@ -212,25 +196,22 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                           key={setting}
                           onClick={async () => {
                             if (setting === 'Logout') {
-                              await appContext.helper.signOut(); // Call signOut function
-                              router.push('/'); // Redirect to home page after logout
+                              await appContext.helper.signOut();
+                              router.push('/');
                             } else if (setting === 'SU') {
                               router.push('/user/su/creative');
                             } else if (setting === 'Campaign') {
                               router.push('/user/campaign');
                             } else {
-                              // Navigate to the dashboard with a specific tab (profile or campaign)
                               router.push(
                                 `/user/dashboard/${setting.toLowerCase()}`,
                                 undefined,
                               );
                             }
-                            handleCloseUserMenu(); // Close the user menu after selection
+                            handleCloseUserMenu();
                           }}
                         >
-                          <Typography sx={{ textAlign: 'center' }}>
-                            {setting}
-                          </Typography>
+                          <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                         </MenuItem>
                       ))}
                     </Menu>
