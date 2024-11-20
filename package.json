@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "link_sdk": "npm link @risefunds/sdk"
+    "link_sdk": "npm link @risefunds/sdk",
+    "postinstall": "echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' > .npmrc"
   },
   "dependencies": {
     "@demvsystems/yup-ast": "^1.2.2",
