@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "link_sdk": "npm link @risefunds/sdk",
-    "postinstall": "echo 'Debugging NPM_TOKEN: $NPM_TOKEN' && echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' > .npmrc"
+    "postinstall": "echo 'Debugging NPM_TOKEN: $NPM_TOKEN' && echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' > .npmrc" 
   },
   "dependencies": {
     "@demvsystems/yup-ast": "^1.2.2",
