@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter from next/navigation
+import { useRouter } from 'next/navigation';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -8,6 +8,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import { DonateRequest } from 'components/Home/DonateRequest';
 
 interface CampaignCardProps {
   img: string;
@@ -67,7 +68,7 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
             width: '100%',
           }}
         >
-          <Button
+          {/* <Button
             size="small"
             variant="contained"
             sx={{
@@ -78,7 +79,16 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
             onClick={handleButtonClick}
           >
             Back this campaign
-          </Button>
+          </Button> */}
+          <DonateRequest
+            ButtonProps={{
+              fullWidth: false,
+              variant: 'contained',
+              sx: { mt: 3, mb: 1 },
+              children: '',
+            }}
+            campaignId={campaignId}
+          />
           <Button
             size="small"
             variant="outlined"
