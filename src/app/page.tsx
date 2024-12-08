@@ -1,6 +1,6 @@
 'use client';
 import { AppContext } from 'context/AppContext';
-import { formSchemas, models } from '@risefunds/sdk';
+import { models } from '@risefunds/sdk';
 import { useEffect, useState, useContext } from 'react';
 import { NavigationLayout } from 'layouts/NavigationLayout';
 import { useRouter } from 'next/navigation';
@@ -357,7 +357,7 @@ export default function Home() {
           <Button
             variant="outlined"
             sx={buttonStyles}
-            onClick={() => router.push('/')}
+            onClick={() => router.push('/campaigns/all')}
           >
             Explore All Campaigns
           </Button>

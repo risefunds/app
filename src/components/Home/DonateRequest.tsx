@@ -118,7 +118,6 @@ export const DonateRequest: React.FC<IJobRequestProps> = ({
 
       <GenericButton
         variant="outlined"
-        fullWidth={true}
         size="large"
         onClick={() => {
           setOpen(true);

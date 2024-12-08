@@ -52,7 +52,7 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
           {name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {category.charAt(0).toUpperCase() + category.slice(1)}
+          {category?.charAt(0).toUpperCase() + category?.slice(1) || ''}
         </Typography>
         {amountRaised && (
           <Box sx={{ mt: 1, fontWeight: 'bold', fontSize: '1rem' }}>
@@ -84,7 +84,11 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
             ButtonProps={{
               fullWidth: false,
               variant: 'contained',
-              sx: { mt: 3, mb: 1 },
+              sx: {
+                textTransform: 'none',
+                padding: '0.5rem 1rem',
+                borderRadius: '5px',
+              },
               children: '',
             }}
             campaignId={campaignId}

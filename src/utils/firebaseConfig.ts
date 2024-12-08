@@ -1,5 +1,9 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  connectAuthEmulator,
+} from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getStorage, connectStorageEmulator } from 'firebase/storage';
 
@@ -15,8 +19,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
 const firestore = getFirestore(app);
-const storage = getStorage(app); //
+const storage = getStorage(app);
 
 // Connect to Firebase Auth Emulator if in development
 if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
@@ -25,4 +30,4 @@ if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
   connectStorageEmulator(storage, 'localhost', 9199);
 }
 
-export { auth, firestore, storage };
+export { auth, googleProvider, firestore, storage };
