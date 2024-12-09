@@ -29,10 +29,6 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
 }) => {
   const router = useRouter();
 
-  const handleButtonClick = () => {
-    router.push(`/campaigns/${campaignId}`);
-  };
-
   return (
     <Card sx={{ maxWidth: 345, borderRadius: '8px', boxShadow: 3, ...sx }}>
       <CardMedia
@@ -68,18 +64,6 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
             width: '100%',
           }}
         >
-          {/* <Button
-            size="small"
-            variant="contained"
-            sx={{
-              textTransform: 'none',
-              padding: '0.5rem 1rem',
-              borderRadius: '5px',
-            }}
-            onClick={handleButtonClick}
-          >
-            Back this campaign
-          </Button> */}
           <DonateRequest
             ButtonProps={{
               fullWidth: false,

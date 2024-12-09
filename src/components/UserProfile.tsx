@@ -37,7 +37,6 @@ const UserProfile = () => {
             ],
           });
 
-
         let creativeUser = creativeUsers?.[0];
         if (!creativeUser) {
           creativeUser =

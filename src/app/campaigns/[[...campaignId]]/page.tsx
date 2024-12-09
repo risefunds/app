@@ -1,15 +1,13 @@
 'use client';
 import React, { useEffect, useState, useContext } from 'react';
+import { DonateRequest } from 'components/Home/DonateRequest';
 import { useParams } from 'next/navigation';
 import { AppContext } from 'context/AppContext';
 import { NavigationLayout } from 'layouts/NavigationLayout';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import LinearProgress from '@mui/material/LinearProgress';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -81,11 +79,11 @@ const CampaignDetails: React.FC = () => {
     fetchData();
   }, [campaign]);
 
-  if (!campaignId) return <div>Loading...</div>;
+  // if (!campaignId) return <div>Loading...</div>;
 
   return (
     <NavigationLayout>
-      {campaign && creativeUser ? (
+      {campaign && campaignId ? (
         <Box
           sx={{
             display: 'flex',
@@ -166,8 +164,8 @@ const CampaignDetails: React.FC = () => {
                       color="text.secondary"
                       gutterBottom
                     >
-                      {creativeUser.details.firstName}{' '}
-                      {creativeUser.details.lastName} |{' '}
+                      {creativeUser?.details.firstName}{' '}
+                      {creativeUser?.details.lastName} |{' '}
                       {campaign.campaignCategory?.value?.toString()} |{' '}
                       {campaign.campaignLocation}
                     </Typography>
@@ -175,20 +173,27 @@ const CampaignDetails: React.FC = () => {
 
                   <Box sx={{ mt: 2 }}>
                     <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                      $2,098 CAD
+                      ${campaign.currentAmount}
                     </Typography>
                     <Typography
                       variant="body2"
                       color="text.secondary"
                       sx={{ mb: 1 }}
                     >
-                      30% of $6,934 Flexible Goal
+                      {(campaign.currentAmount / campaign.targetAmount) * 100}%
+                      of ${campaign.targetAmount} Flexible Goal
                     </Typography>
 
                     <Box sx={{ width: '100%', mt: 1, mb: 1 }}>
                       <LinearProgress
                         variant="determinate"
-                        value={30}
+                        value={Math.min(
+                          (((campaign.currentAmount / campaign.targetAmount) *
+                            100) /
+                            100) *
+                            100,
+                          100,
+                        )}
                         sx={{
                           height: 8,
                           borderRadius: 3,
@@ -223,20 +228,19 @@ const CampaignDetails: React.FC = () => {
                       mt: 2,
                     }}
                   >
-                    <Button
-                      variant="contained"
-                      sx={{
-                        bgcolor: '#3f51b5',
-                        color: '#fff',
-                        fontWeight: 'bold',
-                        py: 1.5,
-                        borderRadius: 3,
-                        mb: 1,
-                        '&:hover': { bgcolor: '#303f9f' },
+                    <DonateRequest
+                      ButtonProps={{
+                        fullWidth: false,
+                        variant: 'contained',
+                        sx: {
+                          textTransform: 'none',
+                          padding: '0.5rem 1rem',
+                          borderRadius: '5px',
+                        },
+                        children: '',
                       }}
-                    >
-                      BACK THIS CAMPAIGN
-                    </Button>
+                      campaignId={campaignId}
+                    />
                   </Box>
                 </Box>
               </Grid>

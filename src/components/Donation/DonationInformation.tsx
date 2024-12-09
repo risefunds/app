@@ -115,8 +115,8 @@ export const DonationInformation: React.FC<IDonationInformationProps> = (
                       primaryTypographyProps={{ variant: 'body1' }}
                       secondaryTypographyProps={{ variant: 'caption' }}
                       sx={{ my: 0 }}
-                      primary={`${donation?.details?.jobTitle} Request`}
-                      secondary={'We have received your job request.'}
+                      primary={`${donation?.details.displayName} Backing`}
+                      secondary={'We have received your backing request.'}
                     />
                   </Grid>
                 </Grid>
@@ -219,10 +219,10 @@ export const DonationInformation: React.FC<IDonationInformationProps> = (
                       primary={
                         isPaymentComplete
                           ? 'Payment Received'
-                          : 'Unlock Creatives'
+                          : 'Send Backing'
                       }
                       secondary={
-                        'We have found over 100+ creatives in our database.'
+                        'Thank you for you interest in supporting a campaign.'
                       }
                     />
                   </Grid>
@@ -236,10 +236,10 @@ export const DonationInformation: React.FC<IDonationInformationProps> = (
           <AccordionDetails>
             {!isPaymentComplete && (
               <>
-                <Image src={matchmaking} alt="lolve" />
+                {/* <Image src={matchmaking} alt="lolve" /> */}
                 <Box mb={2}>
-                  <Typography variant="body1">Based in</Typography>
-                  <Typography variant="body2">Graphic Designer</Typography>
+                  <Typography variant="body1">Company</Typography>
+                  <Typography variant="body2">Risefunds</Typography>
                 </Box>
               </>
             )}
@@ -308,7 +308,7 @@ export const DonationInformation: React.FC<IDonationInformationProps> = (
                       endIcon={<LockOpen />}
                       loading={loading}
                     >
-                      Pay to unlock creative
+                      Pay to back campaign
                     </GenericButton>
                   </>
                 </ListItem>
@@ -359,8 +359,7 @@ export const DonationInformation: React.FC<IDonationInformationProps> = (
                       primaryTypographyProps={{ variant: 'body1' }}
                       secondaryTypographyProps={{ variant: 'caption' }}
                       sx={{ my: 0 }}
-                      primary="Match Making in progress."
-                      secondary={`We will connect you to creatives that suits your needs.`}
+                      primary="Payment in progress."
                     />
                   </Grid>
                 </Grid>
@@ -373,10 +372,9 @@ export const DonationInformation: React.FC<IDonationInformationProps> = (
           <AccordionDetails>
             {isPaymentComplete && (
               <>
-                <Image src={matchmaking} alt="love" />
                 <Box mb={2}>
-                  <Typography variant="body1">Based in</Typography>
-                  <Typography variant="body2">Graphic Designer</Typography>
+                  <Typography variant="body1">Company</Typography>
+                  <Typography variant="body2">Risefunds</Typography>
                 </Box>
               </>
             )}

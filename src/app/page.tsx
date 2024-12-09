@@ -337,6 +337,7 @@ export default function Home() {
                   img={campaign.campaignCard?.files[0].url!}
                   name={campaign.campaignTitle}
                   category={campaign.campaignCategory?.label.toString()!}
+                  amountRaised={`${campaign.currentAmount}`}
                   // Set the height and use flex for equal height
                   sx={{
                     display: 'flex',

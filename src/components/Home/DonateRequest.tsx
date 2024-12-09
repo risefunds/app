@@ -53,9 +53,9 @@ export const DonateRequest: React.FC<IJobRequestProps> = ({
           <Grid size={{ md: 6 }}>
             <Box>
               <DialogContent>
-                <Typography variant="h6">Post a Job for FREE!</Typography>
+                <Typography variant="h6">Back A Campaign</Typography>
                 <Typography variant="body1">
-                  Create your job listing in less than 2 minutes.
+                  Back a Campaign in less than 1 minute.
                 </Typography>
               </DialogContent>
             </Box>

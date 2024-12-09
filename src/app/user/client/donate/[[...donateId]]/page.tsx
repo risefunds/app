@@ -91,9 +91,6 @@ const DonationItem: React.FC<IDonationItemProps> = (props) => {
                 <Typography variant="subtitle1">
                   Hello {appContext.helper.platformUser?.name},
                 </Typography>
-                <Typography variant="subtitle2">
-                  Fugiat mollit esse do velit ut pariatur elit ad ad.
-                </Typography>
               </Box>
               <DonationInformation donation={donation} jwt={jwt} />
               <Box mt={3}>
@@ -107,14 +104,14 @@ const DonationItem: React.FC<IDonationItemProps> = (props) => {
                       primaryTypographyProps={{ variant: 'body1' }}
                       secondaryTypographyProps={{ variant: 'body2' }}
                       primary="How can we help?"
-                      secondary="Write to our founders, Sabine and Bernardo."
+                      secondary="Write to our founders, Uyioghosa, Sonam and Arvinder."
                     />
                     <GenericButton
                       size="small"
                       sx={{ mt: 2 }}
                       startIcon={<MailOutline />}
                       variant="outlined"
-                      href="mailto:team@new3plus.com?subject=chat"
+                      href="mailto:uiyekekpolo7079@conestogac.on.ca?subject=chat"
                     >
                       Chat with us
                     </GenericButton>
