@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AppContext } from 'context/AppContext';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';

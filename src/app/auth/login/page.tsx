@@ -10,6 +10,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from 'utils/firebaseConfig';
 import { useRouter } from 'next/navigation';
 import { FormBuilderJSON } from 'components/FormBuilder';
+import GoogleProvider from 'components/Auth/GoogleProvider';
 
 const LoginPage: React.FC = () => {
   const appContext = useContext(AppContext);
@@ -88,39 +89,38 @@ const LoginPage: React.FC = () => {
             },
           }}
         />
-        <List>
-          <ListItem>
-            <Grid container justifyContent={'space-between'}>
-              <Grid size={{ xs: 8 }} sx={{ display: 'flex' }}>
-                <Typography variant="body2">Don't have membership?</Typography>
-                <Typography
-                  sx={{
-                    pl: 0.5,
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                  }}
-                  variant="body2"
-                >
-                  <NextLink href="/auth/signup" passHref>
-                    Sign up
-                  </NextLink>
-                </Typography>
-              </Grid>
-              <Grid>
-                <Box>
-                  <Typography
-                    sx={{ pl: 0.5, textDecoration: 'underline' }}
-                    variant="body2"
-                  >
-                    <NextLink href="/auth/forget" passHref>
-                      Forgot Password?
-                    </NextLink>
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </ListItem>
-        </List>
+        <Box sx={{ padding: 3 }}>
+          {/* View campaign button */}
+          <GoogleProvider />
+          {/* Member login section */}
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Typography variant="body2">Don't have membership?</Typography>
+            <Typography
+              sx={{
+                pl: 0.5,
+                textDecoration: 'underline',
+                cursor: 'pointer',
+              }}
+              variant="body2"
+            >
+              <NextLink href="/auth/signup" passHref>
+                Sign up
+              </NextLink>
+            </Typography>
+          </Box>
+
+          {/* Forgot password link */}
+          <Box>
+            <Typography
+              sx={{ pl: 0.5, textDecoration: 'underline' }}
+              variant="body2"
+            >
+              <NextLink href="/auth/forget" passHref>
+                Forgot Password?
+              </NextLink>
+            </Typography>
+          </Box>
+        </Box>
       </AuthLayout>
     </>
   );

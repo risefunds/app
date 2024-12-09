@@ -19,7 +19,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Stack from '@mui/material/Stack';
 import { LogoGraphic } from 'components/Graphics/LogoGraphic';
 
-const pages: [] = [];
+const pages = ['Explore'];
 const settings = ['Profile', 'Campaign', 'Logout'];
 
 export interface INavigationLayoutProps {
@@ -47,6 +47,12 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
 
   const { user, appContext } = useAuth();
 
+  const handlePageClick = (page: string) => {
+    if (page === 'Explore') {
+      router.push('/campaigns/all');
+    }
+  };
+
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -54,7 +60,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu: any = () => {
     setAnchorElNav(null);
   };
 
@@ -121,7 +127,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                   sx={{ display: { xs: 'block', md: 'none' } }}
                 >
                   {pages.map((page) => (
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <MenuItem key={page} onClick={() => handlePageClick(page)}>
                       <Typography sx={{ textAlign: 'center' }}>
                         {page}
                       </Typography>
@@ -152,7 +158,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                 {pages.map((page) => (
                   <Button
                     key={page}
-                    onClick={handleCloseNavMenu}
+                    onClick={() => handlePageClick(page)} // Pass the page to handlePageClick
                     sx={{
                       my: 2,
                       color: 'secondary.contrastText',
@@ -164,8 +170,9 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                   </Button>
                 ))}
               </Box>
+
               <Box sx={{ flexGrow: 0 }}>
-                {!user ? (
+                {!user || !user?.email ? (
                   <Stack spacing={2} direction="row">
                     <Button
                       variant="outlined"
@@ -187,7 +194,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                     <Tooltip title="Open settings">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                         <Avatar sx={{ bgcolor: 'primary.main' }}>
-                          {user.email[0].toUpperCase()}
+                          {user?.email[0]?.toUpperCase() || ''}
                         </Avatar>
                       </IconButton>
                     </Tooltip>

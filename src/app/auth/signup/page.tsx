@@ -2,11 +2,15 @@
 
 import { useContext, useEffect } from 'react';
 import { AppContext } from 'context/AppContext';
-import { Typography, List, ListItem } from '@mui/material';
+import { Typography, List, ListItem, Box } from '@mui/material';
 import NextLink from 'next/link';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from 'utils/firebaseConfig';
+import Button from '@mui/material/Button';
 import { AuthLayout } from 'layouts/AuthLayout';
 import { FormBuilderJSON } from 'components/FormBuilder';
 import { useRouter } from 'next/navigation';
+import GoogleProvider from 'components/Auth/GoogleProvider';
 
 const SignupPage: React.FC = () => {
   const appContext = useContext(AppContext);
@@ -107,8 +111,11 @@ const SignupPage: React.FC = () => {
         }}
       />
 
-      <List>
-        <ListItem>
+      <Box sx={{ padding: 3 }}>
+        {/* View campaign button */}
+        <GoogleProvider />
+        {/* Member login section */}
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Typography variant="body2">Already a member,</Typography>
           <Typography
             sx={{ pl: 0.5, textDecoration: 'underline' }}
@@ -118,8 +125,8 @@ const SignupPage: React.FC = () => {
               Login
             </NextLink>
           </Typography>
-        </ListItem>
-      </List>
+        </Box>
+      </Box>
     </AuthLayout>
   );
 };

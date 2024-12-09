@@ -6,7 +6,6 @@ import { useAuth } from 'hooks/useAuth';
 import { NavigationLayout } from 'layouts/NavigationLayout';
 import { formSchemas, models } from '@risefunds/sdk';
 import { ProfileLayout } from 'layouts/ProfileLayout';
-import { useRouter, useSearchParams } from 'next/navigation';
 import LinearProgress from '@mui/material/LinearProgress';
 import { FormBuilderJSON } from 'components/FormBuilder';
 import Box from '@mui/material/Box';

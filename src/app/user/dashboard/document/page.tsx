@@ -6,19 +6,14 @@ import { useAuth } from 'hooks/useAuth';
 import { NavigationLayout } from 'layouts/NavigationLayout';
 import { formSchemas, models } from '@risefunds/sdk';
 import { ProfileLayout } from 'layouts/ProfileLayout';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import { FormBuilderJSON } from 'components/FormBuilder';
-import Typography from '@mui/material/Typography';
 import DashboardLayout from 'layouts/DashboardLayout';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const UserDocument = () => {
   const { user } = useAuth();
   const appContext = useContext(AppContext);
-  const searchParams = useSearchParams();
-  const router = useRouter();
 
   const [creativeUser, setCreativeUser] = useState<
     models.CreativeUserEntityModel | undefined
