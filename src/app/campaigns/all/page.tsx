@@ -9,46 +9,19 @@ import { CampaignCard } from 'components/generic/CampaignCard';
 import { NavigationLayout } from 'layouts/NavigationLayout';
 import { models } from '@risefunds/sdk';
 
-// const campaigns = [
-//   {
-//     id: 1,
-//     title: 'Math Angel',
-//     category: 'Tech & Innovation',
-//     image: '/Home/pop4.webp',
-//     price: 703,
-//     discount: 9,
-//   },
-//   {
-//     id: 2,
-//     title: 'Alien Horde',
-//     category: 'Creative Works',
-//     image: '/Home/pop5.webp',
-//     price: 470,
-//     discount: 27,
-//   },
-//   {
-//     id: 3,
-//     title: 'Community Solar Panels',
-//     category: 'Community Projects',
-//     image: '/Home/pop6.webp',
-//     price: 500,
-//     discount: 15,
-//   },
-// ];
-
 const ExplorePage = () => {
   const appContext = useContext(AppContext);
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState({
     category: 'All Categories',
   });
   const [allCampaigns, setAllCampaigns] = useState<
     models.CampaignEntityModel[]
   >([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       if (!appContext.helper.authUserLoading) {
         const campaigns =
           await appContext.sdkServices?.core.CampaignEntityService.where({

@@ -172,7 +172,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
               </Box>
 
               <Box sx={{ flexGrow: 0 }}>
-                {!user ? (
+                {!user || !user?.email ? (
                   <Stack spacing={2} direction="row">
                     <Button
                       variant="outlined"
@@ -194,7 +194,7 @@ export const NavigationLayout: React.FC<INavigationLayoutProps> = ({
                     <Tooltip title="Open settings">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                         <Avatar sx={{ bgcolor: 'primary.main' }}>
-                          {user.email[0].toUpperCase()}
+                          {user?.email[0]?.toUpperCase() || ''}
                         </Avatar>
                       </IconButton>
                     </Tooltip>

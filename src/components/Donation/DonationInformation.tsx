@@ -27,7 +27,7 @@ import { GenericListItemText } from 'components/generic/GenericListItemText';
 import matchmaking from 'public/images/matchmaking.jpg';
 import _ from 'lodash';
 
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import theme from 'utils/theme';
 import Image from 'next/image';
 
@@ -40,6 +40,9 @@ export const DonationInformation: React.FC<IDonationInformationProps> = (
   props,
 ) => {
   const [editDonation, setEditDonation] = useState(false);
+  const [sponsoredCampaign, setSponsoredCampaign] = useState<
+    models.CampaignEntityModel | undefined
+  >(undefined);
   const [donation, setDonation] = useState<
     models.DonationEntityModel | undefined
   >(props.donation);
@@ -47,6 +50,30 @@ export const DonationInformation: React.FC<IDonationInformationProps> = (
   const [loading, setLoading] = useState(false);
   const isPaymentComplete =
     donation?.stripeCheckoutSessionDetails?.status === 'complete' || false;
+
+  useEffect(() => {
+    if (isPaymentComplete && donation) {
+      const getCampaign = async () => {
+        const campaign =
+          await appContext.sdkServices?.core.CampaignEntityService.get(
+            donation.details.campaignId,
+          );
+        if (campaign) {
+          setSponsoredCampaign(campaign);
+
+          const amountDonated = Number(donation.details.amount);
+          campaign.currentAmount = campaign?.updateAmount(amountDonated);
+          console.log({ currentAmount: campaign.currentAmount });
+
+          await appContext.sdkServices?.core.CampaignEntityService.persist(
+            campaign,
+          );
+        }
+      };
+
+      getCampaign();
+    }
+  }, []);
 
   return (
     <>

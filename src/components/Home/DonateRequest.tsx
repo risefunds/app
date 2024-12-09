@@ -87,7 +87,6 @@ export const DonateRequest: React.FC<IJobRequestProps> = ({
                         await appContext.sdkServices?.base.backendService.request<{
                           customToken: string;
                           donation: string;
-                          platformUserId: string;
                         }>(
                           '/pub/addon/entity/Donation/createDonation',
                           {
@@ -101,7 +100,7 @@ export const DonateRequest: React.FC<IJobRequestProps> = ({
                         );
 
                       router.push(
-                        `/user/client/donate/${donateResponse?.donation}?n3Code=autoSignin&jwt=${donateResponse?.customToken}&uid=${donateResponse?.platformUserId}/${values.amount}`,
+                        `/user/client/donate/${donateResponse?.donation}?n3Code=autoSignin&jwt=${donateResponse?.customToken}&amount=${values.amount}`,
                       );
                     } catch (error) {
                       appContext.helper.showError(error);
